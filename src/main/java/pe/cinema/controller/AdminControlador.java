@@ -1,11 +1,6 @@
 package pe.cinema.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,104 +11,72 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import pe.cinema.entity.Genero;
 import pe.cinema.entity.Pelicula;
-import pe.cinema.repository.GeneroRepositorio;
-import pe.cinema.repository.PeliculaRepositorio;
-import pe.cinema.service.AlmacenServicioImpl;
-
+import pe.cinema.service.PeliculaServicio;
 
 
 @Controller
 @RequestMapping("/admin")
 public class AdminControlador {
 
-	@Autowired
-	private PeliculaRepositorio peliculaRepositorio;
+	private final PeliculaServicio peliculaServicio;
 
-	@Autowired
-	private GeneroRepositorio generoRepositorio;
+	public AdminControlador(PeliculaServicio peliculaServicio) {
+		this.peliculaServicio = peliculaServicio;
+	}
 
-	@Autowired
-	private AlmacenServicioImpl servicio;
-
-	
 	@GetMapping("")
 	public ModelAndView verPaginaDeInicio(@PageableDefault(sort = "titulo", size = 5) Pageable pageable) {
-		Page<Pelicula> peliculas = peliculaRepositorio.findAll(pageable);
-		return new ModelAndView("admin/index").addObject("peliculas", peliculas);
+		return new ModelAndView("admin/index")
+				.addObject("peliculas", peliculaServicio.listarPeliculas(pageable));
 	}
 
 	@GetMapping("/peliculas/nuevo")
 	public ModelAndView mostrarFormularioDeNuevaPelicula() {
-		List<Genero> generos = generoRepositorio.findAll(Sort.by("titulo"));
 		return new ModelAndView("admin/nueva-pelicula")
 				.addObject("pelicula", new Pelicula())
-				.addObject("generos",generos);
+				.addObject("generos", peliculaServicio.listarGeneros());
 	}
-	
+
 	@PostMapping("/peliculas/nuevo")
-	public ModelAndView registrarPelicula(@Validated Pelicula pelicula,BindingResult bindingResult) {
-		if(bindingResult.hasErrors() || pelicula.getPortada().isEmpty()) {
-			if(pelicula.getPortada().isEmpty()) {
-				bindingResult.rejectValue("portada","MultipartNotEmpty");
+	public ModelAndView registrarPelicula(@Validated Pelicula pelicula, BindingResult bindingResult) {
+		if (bindingResult.hasErrors() || pelicula.getPortada().isEmpty()) {
+			if (pelicula.getPortada().isEmpty()) {
+				bindingResult.rejectValue("portada", "MultipartNotEmpty");
 			}
-			
-			List<Genero> generos = generoRepositorio.findAll(Sort.by("titulo"));
 			return new ModelAndView("admin/nueva-pelicula")
-					.addObject("pelicula",pelicula)
-					.addObject("generos",generos);
+					.addObject("pelicula", pelicula)
+					.addObject("generos", peliculaServicio.listarGeneros());
 		}
-		
-		String rutaPortada = servicio.almacenarArchivo(pelicula.getPortada());
-		pelicula.setRutaPortada(rutaPortada);
-		
-		peliculaRepositorio.save(pelicula);
+
+		peliculaServicio.guardarPelicula(pelicula);
 		return new ModelAndView("redirect:/admin");
 	}
-	
+
 	@GetMapping("/peliculas/{id}/editar")
-	public ModelAndView mostrarFormilarioDeEditarPelicula(@PathVariable Integer id) {
-		Pelicula pelicula = peliculaRepositorio.getOne(id);
-		List<Genero> generos = generoRepositorio.findAll(Sort.by("titulo"));
-		
+	public ModelAndView mostrarFormularioDeEditarPelicula(@PathVariable Integer id) {
 		return new ModelAndView("admin/editar-pelicula")
-				.addObject("pelicula",pelicula)
-				.addObject("generos",generos);
+				.addObject("pelicula", peliculaServicio.obtenerPorId(id))
+				.addObject("generos", peliculaServicio.listarGeneros());
 	}
-	
+
 	@PostMapping("/peliculas/{id}/editar")
-	public ModelAndView actualizarPelicula(@PathVariable Integer id,@Validated Pelicula pelicula,BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
-			List<Genero> generos = generoRepositorio.findAll(Sort.by("titulo"));
+	public ModelAndView actualizarPelicula(@PathVariable Integer id,
+										   @Validated Pelicula pelicula,
+										   BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
 			return new ModelAndView("admin/editar-pelicula")
-					.addObject("pelicula",pelicula)
-					.addObject("generos",generos);
+					.addObject("pelicula", pelicula)
+					.addObject("generos", peliculaServicio.listarGeneros());
 		}
-		
-		Pelicula peliculaDB = peliculaRepositorio.getOne(id);
-		peliculaDB.setTitulo(pelicula.getTitulo());
-		peliculaDB.setSinopsis(pelicula.getSinopsis());
-		peliculaDB.setFechaEstreno(pelicula.getFechaEstreno());
-		peliculaDB.setYoutubeTrailerId(pelicula.getYoutubeTrailerId());
-		peliculaDB.setGeneros(pelicula.getGeneros());
-		
-		if(!pelicula.getPortada().isEmpty()) {
-			servicio.eliminarArchivo(peliculaDB.getRutaPortada());
-			String rutaPortada = servicio.almacenarArchivo(pelicula.getPortada());
-			peliculaDB.setRutaPortada(rutaPortada);
-		}
-		
-		peliculaRepositorio.save(peliculaDB);
+
+		peliculaServicio.actualizarPelicula(id, pelicula);
 		return new ModelAndView("redirect:/admin");
 	}
-	
+
 	@PostMapping("/peliculas/{id}/eliminar")
 	public String eliminarPelicula(@PathVariable Integer id) {
-		Pelicula pelicula = peliculaRepositorio.getOne(id);
-		peliculaRepositorio.delete(pelicula);
-		servicio.eliminarArchivo(pelicula.getRutaPortada());
-		
+		peliculaServicio.eliminarPelicula(id);
 		return "redirect:/admin";
 	}
 }

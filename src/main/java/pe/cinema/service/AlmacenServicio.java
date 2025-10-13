@@ -7,13 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AlmacenServicio {
 
-	public void iniciarAlmacenDeArchivos();
+    void iniciarAlmacenDeArchivos();
 
-	public String almacenarArchivo(MultipartFile archivo);
+    String almacenarArchivo(MultipartFile archivo);
 
-	public Path cargarArchivo(String nombreArchivo);
+    Path cargarArchivo(String nombreArchivo);
 
-	public Resource cargarComoRecurso(String nombreArchivo);
+    Resource cargarComoRecurso(String nombreArchivo);
 
-	public void eliminarArchivo(String nombreArchivo);
+    void eliminarArchivo(String nombreArchivo);
 }

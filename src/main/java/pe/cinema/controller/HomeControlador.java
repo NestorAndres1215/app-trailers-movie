@@ -16,33 +16,36 @@ import org.springframework.web.servlet.ModelAndView;
 
 import pe.cinema.entity.Pelicula;
 import pe.cinema.repository.PeliculaRepositorio;
-
+import pe.cinema.service.PeliculaServicio;
 
 
 @Controller
 @RequestMapping("")
 public class HomeControlador {
 
-	@Autowired
-	private PeliculaRepositorio peliculaRepositorio;
+	private final PeliculaServicio peliculaServicio;
+
+	public HomeControlador(PeliculaServicio peliculaServicio) {
+		this.peliculaServicio = peliculaServicio;
+	}
 
 	@GetMapping("")
 	public ModelAndView verPaginaDeInicio() {
-		List<Pelicula> ultimasPeliculas = peliculaRepositorio.findAll(PageRequest.of(0,4,Sort.by("fechaEstreno").descending())).toList();
-		return new ModelAndView("index")
-				      .addObject("ultimasPeliculas", ultimasPeliculas);
-	}
+		List<Pelicula> ultimasPeliculas = peliculaServicio.listarPeliculas(PageRequest.of(0, 4, Sort.by("fechaEstreno").descending()))
+				.toList();
 
-	@GetMapping("/peliculas")
-	public ModelAndView listarPeliculas(@PageableDefault(sort = "fechaEstreno",direction = Sort.Direction.DESC) Pageable pageable) {
-		Page<Pelicula> peliculas = peliculaRepositorio.findAll(pageable);
-		return new ModelAndView("peliculas")
-				        .addObject("peliculas",peliculas);
+		return new ModelAndView("index")
+				.addObject("ultimasPeliculas", ultimasPeliculas);
 	}
-	
+	@GetMapping("/peliculas")
+	public ModelAndView listarPeliculas(@PageableDefault(sort = "fechaEstreno", direction = Sort.Direction.DESC) Pageable pageable) {
+		Page<Pelicula> peliculas = peliculaServicio.listarPeliculas(pageable);
+		return new ModelAndView("peliculas")
+				.addObject("peliculas", peliculas);
+	}
 	@GetMapping("/peliculas/{id}")
 	public ModelAndView mostrarDetallesDePelicula(@PathVariable Integer id) {
-		Pelicula pelicula = peliculaRepositorio.getOne(id);
-		return new ModelAndView("pelicula").addObject("pelicula",pelicula);
-	}
-}
+		Pelicula pelicula = peliculaServicio.obtenerPorId(id);
+		return new ModelAndView("pelicula")
+				.addObject("pelicula", pelicula);
+	}}

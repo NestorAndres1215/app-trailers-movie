@@ -1,56 +1,570 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
 <head>
 	<meta charset="utf-8">
-	<title>CinemaTrailer</title>
+	<title>CinemaTrailer - Panel Administrativo</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
 		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 	<style>
+		:root {
+			--primary-color: #1a1a2e;
+			--secondary-color: #16213e;
+			--accent-color: #e94560;
+			--gold-color: #ffd700;
+			--text-light: #f8f9fa;
+			--text-muted: #adb5bd;
+			--sidebar-width: 280px;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			min-height: 100vh;
+		}
+
 		form .invalid-feedback {
 			display: block;
 		}
 
-		.navbar {
-			background-color: #0b3d91 !important;
+		/* Sidebar mejorado */
+		.sidebar {
+			width: var(--sidebar-width);
+			position: fixed;
+			top: 0;
+			left: 0;
+			height: 100vh;
+			background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+			padding: 0;
+			box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+			z-index: 1000;
+			overflow-y: auto;
 		}
 
-		.navbar-brand, .navbar-nav .nav-link {
-			color: #FFD700 !important;
+		.sidebar-header {
+			padding: 1.5rem;
+			text-align: center;
+			border-bottom: 2px solid var(--accent-color);
+			background: rgba(233, 69, 96, 0.1);
+		}
+
+		.sidebar-header .brand {
+			color: var(--gold-color);
+			font-size: 1.8rem;
 			font-weight: bold;
-			transition: color 0.3s ease;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.5rem;
 		}
 
-		.navbar-nav .nav-link:hover {
-			color: #ffcc00 !important;
+		.sidebar-header .brand:hover {
+			color: var(--accent-color);
+			text-decoration: none;
+		}
+
+		.sidebar-nav {
+			padding: 1rem 0;
+		}
+
+		.nav-section {
+			margin-bottom: 2rem;
+		}
+
+		.nav-section-title {
+			color: var(--text-muted);
+			font-size: 0.75rem;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			padding: 0 1.5rem;
+			margin-bottom: 0.5rem;
+		}
+
+		.sidebar .nav-link {
+			color: var(--text-light);
+			padding: 1rem 1.5rem;
+			font-weight: 500;
+			border: none;
+			transition: all 0.3s ease;
+			position: relative;
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+		}
+
+		.sidebar .nav-link:hover {
+			background: linear-gradient(90deg, var(--accent-color), transparent);
+			color: white;
+			padding-left: 2rem;
+		}
+
+		.sidebar .nav-link.active {
+			background: linear-gradient(90deg, var(--accent-color), rgba(233, 69, 96, 0.3));
+			color: white;
+			border-right: 4px solid var(--gold-color);
+		}
+
+		.sidebar .nav-link i {
+			width: 20px;
+			text-align: center;
+		}
+
+		/* Contenido principal */
+		.main-content {
+			margin-left: var(--sidebar-width);
+			min-height: 100vh;
+		}
+
+		.top-bar {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(10px);
+			padding: 1rem 2rem;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			position: sticky;
+			top: 0;
+			z-index: 999;
+		}
+
+		.content-area {
+			padding: 2rem;
+		}
+
+		/* Dashboard Cards */
+		.dashboard-card {
+			background: rgba(255, 255, 255, 0.95);
+			border-radius: 15px;
+			padding: 1.5rem;
+			margin-bottom: 1.5rem;
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+			border: none;
+		}
+
+		.dashboard-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+		}
+
+		.stat-card {
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.stat-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 4px;
+			background: linear-gradient(90deg, var(--accent-color), var(--gold-color));
+		}
+
+		.stat-number {
+			font-size: 2.5rem;
+			font-weight: bold;
+			color: var(--primary-color);
+			margin: 0.5rem 0;
+		}
+
+		.stat-label {
+			color: var(--text-muted);
+			font-weight: 500;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			font-size: 0.85rem;
+		}
+
+		.stat-icon {
+			font-size: 3rem;
+			color: var(--accent-color);
+			margin-bottom: 1rem;
+		}
+
+		/* Quick Actions */
+		.quick-action {
+			background: linear-gradient(135deg, var(--accent-color), #ff6b8a);
+			color: white;
+			border: none;
+			border-radius: 12px;
+			padding: 1rem 1.5rem;
+			font-weight: 500;
+			transition: all 0.3s ease;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.quick-action:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+			color: white;
+			text-decoration: none;
+		}
+
+		.quick-action.secondary {
+			background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+		}
+
+		.quick-action.secondary:hover {
+			box-shadow: 0 8px 20px rgba(26, 26, 46, 0.4);
+		}
+
+		/* Responsive */
+		@media (max-width: 768px) {
+			.sidebar {
+				transform: translateX(-100%);
+				transition: transform 0.3s ease;
+			}
+
+			.sidebar.show {
+				transform: translateX(0);
+			}
+
+			.main-content {
+				margin-left: 0;
+			}
+		}
+
+		/* Animaciones */
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(30px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.fade-in-up {
+			animation: fadeInUp 0.6s ease-out;
+		}
+
+		/* Mejoras para tablas */
+		.table-container {
+			background: white;
+			border-radius: 15px;
+			overflow: hidden;
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+		}
+
+		.table-header {
+			background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+			color: white;
+			padding: 1rem;
+			font-weight: 600;
+		}
+
+		/* User profile */
+		.user-profile {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			color: var(--primary-color);
+		}
+
+		.user-avatar {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--accent-color), var(--gold-color));
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-weight: bold;
 		}
 	</style>
 </head>
-
 <body>
+<!-- Sidebar -->
+<div class="sidebar">
+	<div class="sidebar-header">
+		<a href="/" class="brand">
+			<i class="fas fa-film"></i>
+			CINEMA MAX
+		</a>
+	</div>
 
-<nav class="navbar navbar-expand-md navbar-dark">
-	<div class="container">
-		<a class="navbar-brand" href="#">CINEMA MAX</a>
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-			<span class="navbar-toggler-icon"></span>
-		</button>
+	<div class="sidebar-nav">
+		<div class="nav-section">
+			<div class="nav-section-title">Principal</div>
+			<ul class="nav flex-column">
+				<li class="nav-item">
+					<a class="nav-link active" href="/admin">
+						<i class="fas fa-tachometer-alt"></i>
+						Dashboard
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/">
+						<i class="fas fa-home"></i>
+						Inicio
+					</a>
+				</li>
+			</ul>
+		</div>
 
-		<div class="collapse navbar-collapse" id="menu">
-			<ul class="navbar-nav ms-auto">
-				<li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
-				<li class="nav-item"><a class="nav-link" href="/peliculas">Películas</a></li>
-				<li class="nav-item"><a class="nav-link" href="/admin">Administración</a></li>
+		<div class="nav-section">
+			<div class="nav-section-title">Gestión</div>
+			<ul class="nav flex-column">
+				<li class="nav-item">
+					<a class="nav-link" href="/peliculas">
+						<i class="fas fa-video"></i>
+						Películas
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/admin/peliculas/nueva">
+						<i class="fas fa-plus-circle"></i>
+						Nueva Película
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/admin/salas">
+						<i class="fas fa-chair"></i>
+						Salas
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/admin/funciones">
+						<i class="fas fa-calendar-alt"></i>
+						Funciones
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="nav-section">
+			<div class="nav-section-title">Reportes</div>
+			<ul class="nav flex-column">
+				<li class="nav-item">
+					<a class="nav-link" href="/admin/reportes/ventas">
+						<i class="fas fa-chart-line"></i>
+						Ventas
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/admin/reportes/ocupacion">
+						<i class="fas fa-chart-pie"></i>
+						Ocupación
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="nav-section">
+			<div class="nav-section-title">Sistema</div>
+			<ul class="nav flex-column">
+				<li class="nav-item">
+					<a class="nav-link" href="/admin/usuarios">
+						<i class="fas fa-users"></i>
+						Usuarios
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/admin/configuracion">
+						<i class="fas fa-cog"></i>
+						Configuración
+					</a>
+				</li>
 			</ul>
 		</div>
 	</div>
-</nav>
+</div>
 
-<div layout:fragment="content" class="container my-5">
+<!-- Contenido principal -->
+<div class="main-content">
+	<!-- Top Bar -->
+	<div class="top-bar">
+		<div class="d-flex justify-content-between align-items-center">
+			<div>
+				<h4 class="mb-0" style="color: var(--primary-color);">Panel Administrativo</h4>
+				<small class="text-muted">Gestiona tu cinema de manera eficiente</small>
+			</div>
+			<div class="user-profile">
+				<div class="user-avatar">
+					<i class="fas fa-user"></i>
+				</div>
+				<div>
+					<div style="font-weight: 600;">Administrador</div>
+					<small class="text-muted">Cinema Max</small>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Área de contenido -->
+	<div layout:fragment="content" class="content-area">
+		<div class="row fade-in-up">
+			<!-- Estadísticas -->
+			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+				<div class="dashboard-card stat-card">
+					<div class="stat-icon">
+						<i class="fas fa-video"></i>
+					</div>
+					<div class="stat-number">24</div>
+					<div class="stat-label">Películas Activas</div>
+				</div>
+			</div>
+
+			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+				<div class="dashboard-card stat-card">
+					<div class="stat-icon">
+						<i class="fas fa-ticket-alt"></i>
+					</div>
+					<div class="stat-number">1,247</div>
+					<div class="stat-label">Entradas Vendidas</div>
+				</div>
+			</div>
+
+			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+				<div class="dashboard-card stat-card">
+					<div class="stat-icon">
+						<i class="fas fa-dollar-sign"></i>
+					</div>
+					<div class="stat-number">$12,450</div>
+					<div class="stat-label">Ingresos del Mes</div>
+				</div>
+			</div>
+
+			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+				<div class="dashboard-card stat-card">
+					<div class="stat-icon">
+						<i class="fas fa-chair"></i>
+					</div>
+					<div class="stat-number">85%</div>
+					<div class="stat-label">Ocupación Promedio</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Acciones rápidas -->
+		<div class="row mt-4">
+			<div class="col-12">
+				<div class="dashboard-card">
+					<h5 class="mb-3" style="color: var(--primary-color);">
+						<i class="fas fa-bolt"></i> Acciones Rápidas
+					</h5>
+					<div class="d-flex flex-wrap gap-3">
+						<a href="/admin/peliculas/nueva" class="quick-action">
+							<i class="fas fa-plus"></i>
+							Agregar Película
+						</a>
+						<a href="/admin/funciones/nueva" class="quick-action secondary">
+							<i class="fas fa-calendar-plus"></i>
+							Nueva Función
+						</a>
+						<a href="/admin/reportes/ventas" class="quick-action">
+							<i class="fas fa-chart-bar"></i>
+							Ver Reportes
+						</a>
+						<a href="/admin/configuracion" class="quick-action secondary">
+							<i class="fas fa-tools"></i>
+							Configuración
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tabla de ejemplo -->
+		<div class="row mt-4">
+			<div class="col-12">
+				<div class="table-container">
+					<div class="table-header">
+						<h6 class="mb-0">
+							<i class="fas fa-film"></i>
+							Películas Recientes
+						</h6>
+					</div>
+					<div class="table-responsive">
+						<table class="table table-hover mb-0">
+							<thead>
+							<tr>
+								<th>Película</th>
+								<th>Género</th>
+								<th>Duración</th>
+								<th>Estado</th>
+								<th>Acciones</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td>
+									<div class="d-flex align-items-center">
+										<div class="me-3">
+											<div style="width: 40px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem;">
+												POSTER
+											</div>
+										</div>
+										<div>
+											<strong>Avengers: Endgame</strong>
+											<br>
+											<small class="text-muted">2023</small>
+										</div>
+									</div>
+								</td>
+								<td><span class="badge bg-primary">Acción</span></td>
+								<td>181 min</td>
+								<td><span class="badge bg-success">Activa</span></td>
+								<td>
+									<button class="btn btn-sm btn-outline-primary me-1">
+										<i class="fas fa-edit"></i>
+									</button>
+									<button class="btn btn-sm btn-outline-danger">
+										<i class="fas fa-trash"></i>
+									</button>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="d-flex align-items-center">
+										<div class="me-3">
+											<div style="width: 40px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem;">
+												POSTER
+											</div>
+										</div>
+										<div>
+											<strong>Spider-Man: No Way Home</strong>
+											<br>
+											<small class="text-muted">2023</small>
+										</div>
+									</div>
+								</td>
+								<td><span class="badge bg-primary">Acción</span></td>
+								<td>148 min</td>
+								<td><span class="badge bg-success">Activa</span></td>
+								<td>
+									<button class="btn btn-sm btn-outline-primary me-1">
+										<i class="fas fa-edit"></i>
+									</button>
+									<button class="btn btn-sm btn-outline-danger">
+										<i class="fas fa-trash"></i>
+									</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
@@ -60,8 +574,66 @@
 <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<div layout:fragment="scripts" th:remove="tag">
-</div>
-</body>
+<script>
+	// Animaciones y efectos
+    document.addEventListener('DOMContentLoaded', function() {
+        // Efecto de hover en las cards
+        const cards = document.querySelectorAll('.dashboard-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
 
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Responsive sidebar toggle
+        if (window.innerWidth <= 768) {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+
+            // Agregar botón toggle para móvil
+            const toggleBtn = document.createElement('button');
+            toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            toggleBtn.className = 'btn btn-primary position-fixed';
+            toggleBtn.style.cssText = 'top: 10px; left: 10px; z-index: 1001;';
+
+            toggleBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+
+            document.body.appendChild(toggleBtn);
+        }
+    });
+
+    // Actualizar números con animación
+    function animateNumbers() {
+        const numbers = document.querySelectorAll('.stat-number');
+        numbers.forEach(number => {
+            const target = parseInt(number.textContent.replace(/[^0-9]/g, ''));
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                number.textContent = number.textContent.includes('$') ?
+                    '$' + Math.floor(current).toLocaleString() :
+                    number.textContent.includes('%') ?
+                    Math.floor(current) + '%' :
+                    Math.floor(current).toLocaleString();
+            }, 20);
+        });
+    }
+
+    // Ejecutar animación al cargar
+    setTimeout(animateNumbers, 500);
+</script>
+
+<div layout:fragment="scripts" th:remove="tag"></div>
+</body>
 </html>
