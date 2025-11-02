@@ -1,5 +1,6 @@
 package pe.cinema.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -17,13 +18,12 @@ import pe.cinema.service.PeliculaServicio;
 
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminControlador {
 
 	private final PeliculaServicio peliculaServicio;
 
-	public AdminControlador(PeliculaServicio peliculaServicio) {
-		this.peliculaServicio = peliculaServicio;
-	}
+
 
 	@GetMapping("")
 	public ModelAndView verPaginaDeInicio(@PageableDefault(sort = "titulo", size = 5) Pageable pageable) {

@@ -1,52 +1,28 @@
 package pe.cinema.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+
+
+
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
+@Table(name = "genero")
+@Data // Genera getters, setters, toString, equals, hashCode
+@NoArgsConstructor // Constructor sin argumentos
+@AllArgsConstructor // Constructor con todos los campos
+@Builder // Para usar patrón builder
 public class Genero {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // ID autoincremental
 	@Column(name = "id_genero")
 	private Integer id;
+
+	@Column(nullable = false, unique = true) // único y obligatorio
+	@NotBlank(message = "El título del género no puede estar vacío")
 	private String titulo;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getTitulo() {
-		return titulo;
-	}
-
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public Genero(Integer id, String titulo) {
-		super();
-		this.id = id;
-		this.titulo = titulo;
-	}
-
-	public Genero() {
-		super();
-		
-	}
-	public Genero(String titulo) {
-		super();
-		this.titulo = titulo;
-	}
-
-	public Genero(Integer id) {
-		super();
-		this.id = id;
-	}
-	
-	
 }
