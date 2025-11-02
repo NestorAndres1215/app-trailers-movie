@@ -126,7 +126,7 @@ public class PeliculaServicio {
     /** Buscar películas por fecha de estreno */
     public List<Pelicula> buscarPorFechaEstreno(LocalDate fechaEstreno) {
         if (fechaEstreno == null) {
-            throw new IllegalArgumentException("Debe proporcionar una fecha de estreno");
+            throw new IllegalArgumentException(AppConstants.PELICULA_FECHA_BUSQUEDA);
         }
         return peliculaRepositorio.findByFechaEstreno(fechaEstreno);
     }
@@ -134,7 +134,7 @@ public class PeliculaServicio {
     /** Buscar películas por género */
     public List<Pelicula> buscarPorGeneros(List<Genero> generos) {
         if (generos == null || generos.isEmpty()) {
-            throw new IllegalArgumentException("Debe proporcionar al menos un género");
+            throw new IllegalArgumentException(AppConstants.PELICULA_GENERO_BUSQUEDA);
         }
         return peliculaRepositorio.findByGenerosIn(generos);
     }

@@ -4,135 +4,68 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 	<meta charset="utf-8">
-	<title>Formulario de Película</title>
-	<!-- Incluir Bootstrap CSS -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<!-- Incluir Font Awesome -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-	<style>
-		/* Animación de entrada */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Estilos para la tarjeta */
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.5s ease-in-out;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Efectos hover para inputs */
-        .form-control:hover {
-            border-color: #007bff;
-            transform: scale(1.02);
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-            transform: scale(1.02);
-        }
-
-        /* Efectos hover para el botón */
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-            transition: all 0.3s ease;
-        }
-
-        /* Estilos para campos inválidos */
-        .is-invalid {
-            border-color: #dc3545 !important;
-        }
-
-        .invalid-feedback {
-            color: #dc3545;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-	</style>
 </head>
 <body>
-<div class="container mt-5">
-	<div class="row justify-content-center">
-		<div class="col-md-8">
-			<div class="card">
-				<div class="card-body">
-					<h2 class="card-title text-center mb-4"><i class="fas fa-film me-2"></i>Formulario de Película</h2>
-					<form action="" method="post" th:object="${pelicula}" enctype="multipart/form-data">
-						<div class="row">
-							<!-- Columna izquierda -->
-							<div class="col-md-6">
-								<!-- Título -->
-								<div class="mb-3">
-									<label for="titulo" class="form-label"><i class="fas fa-heading me-2"></i>Título</label>
-									<input type="text" id="titulo" class="form-control" placeholder="Digite el título" th:field="*{titulo}" required>
-									<div class="invalid-feedback" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
-								</div>
 
-								<!-- Sinopsis -->
-								<div class="mb-3">
-									<label for="sinopsis" class="form-label"><i class="fas fa-align-left me-2"></i>Sinopsis</label>
-									<textarea id="sinopsis" class="form-control" placeholder="Digite la sinopsis" th:field="*{sinopsis}" required></textarea>
-									<div class="invalid-feedback" th:if="${#fields.hasErrors('sinopsis')}" th:errors="*{sinopsis}"></div>
-								</div>
-
-								<!-- Fecha de Estreno -->
-								<div class="mb-3">
-									<label for="fechaEstreno" class="form-label"><i class="fas fa-calendar-alt me-2"></i>Fecha de Estreno</label>
-									<input type="date" id="fechaEstreno" class="form-control" th:field="*{fechaEstreno}" required>
-									<div class="invalid-feedback" th:if="${#fields.hasErrors('fechaEstreno')}" th:errors="*{fechaEstreno}"></div>
-								</div>
-							</div>
-
-							<!-- Columna derecha -->
-							<div class="col-md-6">
-								<!-- YouTube Trailer ID -->
-								<div class="mb-3">
-									<label for="youtubeTrailerId" class="form-label"><i class="fab fa-youtube me-2"></i>YouTube Trailer ID</label>
-									<input type="text" id="youtubeTrailerId" class="form-control" placeholder="Digite el YouTube Trailer ID" th:field="*{youtubeTrailerId}" required>
-									<div class="invalid-feedback" th:if="${#fields.hasErrors('youtubeTrailerId')}" th:errors="*{youtubeTrailerId}"></div>
-								</div>
-
-								<!-- Portada -->
-								<div class="mb-3">
-									<label for="portada" class="form-label"><i class="fas fa-image me-2"></i>Portada</label>
-									<input type="file" id="portada" class="form-control" th:field="*{portada}" required>
-									<div class="invalid-feedback" th:if="${#fields.hasErrors('portada')}" th:errors="*{portada}"></div>
-								</div>
-
-								<!-- Géneros -->
-								<div class="mb-3">
-									<label for="generos" class="form-label"><i class="fas fa-tags me-2"></i>Géneros</label>
-									<select id="generos" class="form-control" th:field="*{generos}" multiple required>
-										<option th:each="genero : ${generos}" th:value="${genero.id}" th:text="${genero.titulo}"></option>
-									</select>
-									<div class="invalid-feedback" th:if="${#fields.hasErrors('generos')}" th:errors="*{generos}"></div>
-								</div>
-							</div>
-						</div>
-
-						<!-- Botón de Guardar -->
-						<div class="d-grid mt-4">
-							<button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Guardar</button>
-						</div>
-					</form>
-				</div>
-			</div>
+<div layout:fragment="form">
+	<br>
+	<form action="" method="post" th:object="${pelicula}"
+		  enctype="multipart/form-data">
+		<div class="mb-3">
+			<label for="titulo" class="form-label">Titulo : </label> <input
+				type="text" id="titulo" placeholder="Digite el titulo"
+				class="form-control" th:field="*{titulo}">
+			<div class="invalid-feedback" th:if="${#fields.hasErrors('titulo')}"
+				 th:errors="*{titulo}"></div>
 		</div>
-	</div>
-</div>
 
-<!-- Incluir Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<div class="mb-3">
+			<label for="sinopsis" class="form-label">Sinopsis : </label>
+			<textarea id="sinopsis" placeholder="Digite la sinopsis"
+					  class="form-control" th:field="*{sinopsis}"></textarea>
+			<div class="invalid-feedback"
+				 th:if="${#fields.hasErrors('sinopsis')}" th:errors="*{sinopsis}"></div>
+		</div>
+
+		<div class="mb-3">
+			<label for="fechaEstreno" class="form-label">Fecha de
+				estreno : </label> <input type="date" id="fechaEstreno"
+										  placeholder="Digite la fecha de estreno" class="form-control"
+										  th:field="*{fechaEstreno}">
+			<div class="invalid-feedback"
+				 th:if="${#fields.hasErrors('fechaEstreno')}"
+				 th:errors="*{fechaEstreno}"></div>
+		</div>
+		<div class="mb-3">
+			<label for="youtubeTrailerId" class="form-label">Youtube
+				Trailer ID : </label> <input type="text" id="youtubeTrailerId"
+											 placeholder="Digite el Youtube Trailer ID" class="form-control"
+											 th:field="*{youtubeTrailerId}">
+			<div class="invalid-feedback"
+				 th:if="${#fields.hasErrors('youtubeTrailerId')}"
+				 th:errors="*{youtubeTrailerId}"></div>
+		</div>
+		<div class="mb-3">
+			<label for="portada" class="form-label">Portada : </label> <input
+				type="file" name="portada" id="portad" class="form-control"
+				th:field="*{portada}">
+			<div class="invalid-feedback"
+				 th:if="${#fields.hasErrors('portada')}" th:errors="*{portada}"></div>
+		</div>
+		<div class="mb-3">
+			<label for="generos" class="form-label">Genero : </label> <select
+				id="generos" class="form-control" th:field="*{generos}" multiple>
+			<option th:each="genero : ${generos}" th:value="${genero.id}"
+					th:text="${genero.titulo}"></option>
+		</select>
+			<div class="invalid-feedback"
+				 th:if="${#fields.hasErrors('generos')}" th:errors="*{generos}"></div>
+		</div>
+
+		<div class="text-end">
+			<button type="submit" class="btn btn-primary">Guardar</button>
+		</div>
+	</form>
+</div>
 </body>
 </html>
