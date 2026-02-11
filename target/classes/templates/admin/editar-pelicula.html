@@ -2,18 +2,92 @@
 <html lang="es"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{master.html}">
+	  layout:decorate="~{master.html}"
+	  class="scroll-smooth">
 <head>
 	<meta charset="utf-8">
-	<title>Editar película</title>
-</head>
-<body>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Editar [[${pelicula.titulo}]] - CinemaTrailer</title>
 
-<div layout:fragment="content">
-	<h2>Editar película</h2>
-	<br>
-	<div th:insert="admin/form :: form">
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
+	<script>
+		tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cinema-red': '#8B0000',
+                        'cinema-gold': '#D4AF37',
+                        'cinema-dark': '#121212',
+                        'cinema-gray': '#1a1a1a',
+                    },
+                    fontFamily: {
+                        'cinzel': ['Cinzel', 'serif'],
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }
+                    }
+                }
+            }
+        }
+	</script>
+
+	<style>
+		.glass-card { @apply bg-cinema-gray/80 backdrop-blur-xl border border-cinema-gold/30 rounded-2xl shadow-2xl; }
+	</style>
+</head>
+<body class="bg-cinema-dark text-gray-100 min-h-screen">
+
+<div layout:fragment="content" class="max-w-7xl mx-auto px-4 py-24">
+
+	<!-- Título de la página -->
+	<div class="text-center mb-12 animate-fade-in">
+		<h1 class="text-4xl md:text-5xl font-cinzel font-bold mb-4">
+            <span class="bg-gradient-to-r from-cinema-gold to-yellow-400 bg-clip-text text-transparent">
+                Editar Película
+            </span>
+		</h1>
+		<p class="text-xl text-gray-300 font-montserrat">
+			Modifica los detalles de <span class="text-cinema-gold font-bold" th:text="${pelicula.titulo}">Título</span>
+		</p>
 	</div>
+
+	<!-- Formulario reutilizado desde fragmento -->
+	<div class="glass-card p-8 animate-slide-up" th:insert="~{admin/form :: form}">
+		<!-- El contenido del formulario se inserta aquí -->
+	</div>
+
 </div>
+
+<div layout:fragment="scripts">
+	<script>
+		// Animaciones de entrada
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fade-in, .animate-slide-up');
+            elements.forEach((el, i) => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    if (el.classList.contains('animate-fade-in')) {
+                        el.style.animation = 'fadeIn 0.8s ease-out forwards';
+                    } else {
+                        el.style.animation = 'slideUp 0.6s ease-out forwards';
+                    }
+                }, i * 200);
+            });
+        });
+	</script>
+</div>
+
 </body>
 </html>

@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import pe.cinema.entity.Pelicula;
-import pe.cinema.service.PeliculaServicio;
+import pe.cinema.service.PeliculaService;
+
 
 import java.util.List;
 
@@ -20,11 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeControlador {
 
-	private final PeliculaServicio peliculaServicio;
+	private final PeliculaService peliculaServicio;
 
-	// ================================
-	// PÁGINA PRINCIPAL / ÚLTIMAS PELÍCULAS
-	// ================================
 	@GetMapping("")
 	public ModelAndView verPaginaDeInicio() {
 		List<Pelicula> ultimasPeliculas = peliculaServicio
@@ -35,9 +33,6 @@ public class HomeControlador {
 				.addObject("ultimasPeliculas", ultimasPeliculas);
 	}
 
-	// ================================
-	// LISTADO DE PELÍCULAS CON PAGINACIÓN
-	// ================================
 	@GetMapping("/peliculas")
 	public ModelAndView listarPeliculas(
 			@PageableDefault(sort = "fechaEstreno", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -47,9 +42,6 @@ public class HomeControlador {
 				.addObject("peliculas", peliculas);
 	}
 
-	// ================================
-	// DETALLES DE PELÍCULA
-	// ================================
 	@GetMapping("/peliculas/{id}")
 	public ModelAndView mostrarDetallesDePelicula(@PathVariable Integer id) {
 		Pelicula pelicula = peliculaServicio.obtenerPorId(id);

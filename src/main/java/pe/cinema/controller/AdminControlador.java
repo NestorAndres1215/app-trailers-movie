@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import pe.cinema.entity.Pelicula;
-import pe.cinema.service.PeliculaServicio;
+
+import pe.cinema.service.PeliculaService;
 import pe.cinema.util.AppConstants;
 
 @Controller
@@ -18,20 +19,14 @@ import pe.cinema.util.AppConstants;
 @RequiredArgsConstructor
 public class AdminControlador {
 
-	private final PeliculaServicio peliculaServicio;
+	private final PeliculaService peliculaServicio;
 
-	// ================================
-	// LISTADO DE PELÍCULAS
-	// ================================
 	@GetMapping("")
 	public ModelAndView verPaginaDeInicio(@PageableDefault(sort = "titulo", size = 5) Pageable pageable) {
 		return new ModelAndView("admin/index")
 				.addObject("peliculas", peliculaServicio.listarPeliculas(pageable));
 	}
 
-	// ================================
-	// NUEVA PELÍCULA
-	// ================================
 	@GetMapping("/peliculas/nuevo")
 	public ModelAndView mostrarFormularioDeNuevaPelicula() {
 		return prepararFormulario(new Pelicula(), "admin/nueva-pelicula");
@@ -50,9 +45,6 @@ public class AdminControlador {
 		return new ModelAndView("redirect:/admin");
 	}
 
-	// ================================
-	// EDITAR PELÍCULA
-	// ================================
 	@GetMapping("/peliculas/{id}/editar")
 	public ModelAndView mostrarFormularioDeEditarPelicula(@PathVariable Integer id) {
 		Pelicula pelicula = peliculaServicio.obtenerPorId(id);
@@ -71,18 +63,13 @@ public class AdminControlador {
 		return new ModelAndView("redirect:/admin");
 	}
 
-	// ================================
-	// ELIMINAR PELÍCULA
-	// ================================
+
 	@PostMapping("/peliculas/{id}/eliminar")
 	public String eliminarPelicula(@PathVariable Integer id) {
 		peliculaServicio.eliminarPelicula(id);
 		return "redirect:/admin";
 	}
 
-	// ================================
-	// MÉTODO AUXILIAR PARA FORMULARIOS
-	// ================================
 	private ModelAndView prepararFormulario(Pelicula pelicula, String vista) {
 		return new ModelAndView(vista)
 				.addObject("pelicula", pelicula)

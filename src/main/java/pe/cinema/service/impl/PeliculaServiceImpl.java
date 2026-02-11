@@ -1,4 +1,4 @@
-package pe.cinema.service;
+package pe.cinema.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,6 +10,8 @@ import pe.cinema.entity.Genero;
 import pe.cinema.entity.Pelicula;
 import pe.cinema.repository.GeneroRepositorio;
 import pe.cinema.repository.PeliculaRepositorio;
+import pe.cinema.service.AlmacenService;
+import pe.cinema.service.PeliculaService;
 import pe.cinema.util.AppConstants;
 
 import java.time.LocalDate;
@@ -17,25 +19,22 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PeliculaServicio {
+public class PeliculaServiceImpl implements PeliculaService {
 
     private final PeliculaRepositorio peliculaRepositorio;
     private final GeneroRepositorio generoRepositorio;
-    private final AlmacenServicio almacenServicio;
-
-    /** Listar películas con paginación */
+    private final AlmacenService almacenServicio;
+@Override
     public Page<Pelicula> listarPeliculas(Pageable pageable) {
         return peliculaRepositorio.findAll(pageable);
     }
 
-    /** Listar todos los géneros ordenados por título */
+@Override
     public List<Genero> listarGeneros() {
         return generoRepositorio.findAll(Sort.by("titulo"));
     }
-
-    /** Guardar nueva película */
+@Override
     public Pelicula guardarPelicula(Pelicula pelicula) {
-        validarPelicula(pelicula, true);
 
         String rutaPortada = almacenServicio.almacenarArchivo(pelicula.getPortada());
 
@@ -51,20 +50,13 @@ public class PeliculaServicio {
 
         return peliculaRepositorio.save(peliculaAGuardar);
     }
-
-    /** Obtener película por ID */
+@Override
     public Pelicula obtenerPorId(Integer id) {
-        if (id == null || id <= 0) {
-            throw new IllegalArgumentException(AppConstants.PELICULA_ID_INVALIDO);
-        }
-
         return peliculaRepositorio.findById(id)
                 .orElseThrow(() -> new RuntimeException(String.format(AppConstants.PELICULA_NO_ENCONTRADA, id)));
     }
-
-    /** Actualizar película existente */
+@Override
     public Pelicula actualizarPelicula(Integer id, Pelicula pelicula) {
-        validarPelicula(pelicula, false);
 
         Pelicula peliculaDB = obtenerPorId(id);
 
@@ -75,7 +67,6 @@ public class PeliculaServicio {
         peliculaDB.setGeneros(pelicula.getGeneros());
 
         if (pelicula.getPortada() != null && !pelicula.getPortada().isEmpty()) {
-            // Eliminar portada antigua si existe
             if (StringUtils.hasText(peliculaDB.getRutaPortada())) {
                 almacenServicio.eliminarArchivo(peliculaDB.getRutaPortada());
             }
@@ -85,8 +76,7 @@ public class PeliculaServicio {
 
         return peliculaRepositorio.save(peliculaDB);
     }
-
-    /** Eliminar película */
+@Override
     public void eliminarPelicula(Integer id) {
         Pelicula pelicula = obtenerPorId(id);
 
@@ -97,49 +87,23 @@ public class PeliculaServicio {
         peliculaRepositorio.delete(pelicula);
     }
 
-    /** Validar campos de película */
-    private void validarPelicula(Pelicula pelicula, boolean esNuevo) {
-        if (pelicula == null) {
-            throw new IllegalArgumentException(AppConstants.PELICULA_NULL);
-        }
-
-        if (!StringUtils.hasText(pelicula.getTitulo())) {
-            throw new IllegalArgumentException(AppConstants.PELICULA_TITULO_OBLIGATORIO);
-        }
-
-        if (esNuevo && (pelicula.getPortada() == null || pelicula.getPortada().isEmpty())) {
-            throw new IllegalArgumentException(AppConstants.PELICULA_PORTADA_OBLIGATORIA);
-        }
-
-        if (pelicula.getGeneros() == null || pelicula.getGeneros().isEmpty()) {
-            throw new IllegalArgumentException(AppConstants.PELICULA_GENEROS_OBLIGATORIOS);
-        }
-    }
-    /** Buscar películas por título (contiene) */
+    @Override
     public List<Pelicula> buscarPorTitulo(String titulo) {
-        if (!StringUtils.hasText(titulo)) {
-            throw new IllegalArgumentException("Debe proporcionar un título para buscar");
-        }
         return peliculaRepositorio.findByTituloContainingIgnoreCase(titulo);
     }
 
-    /** Buscar películas por fecha de estreno */
+    @Override
     public List<Pelicula> buscarPorFechaEstreno(LocalDate fechaEstreno) {
-        if (fechaEstreno == null) {
-            throw new IllegalArgumentException(AppConstants.PELICULA_FECHA_BUSQUEDA);
-        }
         return peliculaRepositorio.findByFechaEstreno(fechaEstreno);
     }
 
-    /** Buscar películas por género */
+    @Override
     public List<Pelicula> buscarPorGeneros(List<Genero> generos) {
-        if (generos == null || generos.isEmpty()) {
-            throw new IllegalArgumentException(AppConstants.PELICULA_GENERO_BUSQUEDA);
-        }
+
         return peliculaRepositorio.findByGenerosIn(generos);
     }
 
-    /** Buscar películas combinando título, fecha y géneros */
+    @Override
     public List<Pelicula> buscarAvanzado(String titulo, LocalDate fechaEstreno, List<Genero> generos) {
         return peliculaRepositorio.findByTituloContainingIgnoreCaseAndFechaEstrenoAndGenerosIn(
                 titulo, fechaEstreno, generos);

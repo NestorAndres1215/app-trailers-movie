@@ -2,18 +2,111 @@
 <html lang="es"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{master.html}">
+	  layout:decorate="~{master.html}"
+	  class="scroll-smooth">
 <head>
 	<meta charset="utf-8">
-	<title>Registro de películas</title>
-</head>
-<body>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Nueva Película - CinemaTrailer</title>
 
-<div layout:fragment="content">
-	<h2>Registro de película</h2>
-	<br>
-	<div th:insert="admin/form :: form">
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
+	<script>
+		tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cinema-red': '#8B0000',
+                        'cinema-gold': '#D4AF37',
+                        'cinema-dark': '#121212',
+                        'cinema-gray': '#1a1a1a',
+                    },
+                    fontFamily: {
+                        'cinzel': ['Cinzel', 'serif'],
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        pulseGlow: { '0%, 100%': { boxShadow: '0 0 15px rgba(212, 175, 55, 0.3)' }, '50%': { boxShadow: '0 0 30px rgba(212, 175, 55, 0.6)' } }
+                    }
+                }
+            }
+        }
+	</script>
+
+	<style>
+		.glass-card { @apply bg-cinema-gray/80 backdrop-blur-xl border border-cinema-gold/30 rounded-2xl shadow-2xl; }
+        .btn-back { @apply inline-flex items-center gap-2 px-5 py-2.5 bg-cinema-gray/80 text-cinema-gold border border-cinema-gold/50 rounded-full font-semibold hover:bg-cinema-gray hover:scale-105 transition-all duration-300; }
+	</style>
+</head>
+<body class="bg-cinema-dark text-gray-100 min-h-screen">
+
+<div layout:fragment="content" class="max-w-7xl mx-auto px-4 py-24">
+
+	<!-- Título + Botón Volver -->
+	<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12 animate-fade-in">
+		<div>
+			<h1 class="text-4xl md:text-5xl font-cinzel font-bold mb-2">
+                <span class="bg-gradient-to-r from-cinema-gold to-yellow-400 bg-clip-text text-transparent">
+                    Registro de Película
+                </span>
+			</h1>
+			<p class="text-lg text-gray-300 font-montserrat">
+				Completa los datos para agregar una nueva película al catálogo
+			</p>
+		</div>
+		<a href="/admin/peliculas" class="btn-back">
+			<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+			</svg>
+			Volver al Listado
+		</a>
 	</div>
+
+	<!-- Formulario reutilizado desde fragmento -->
+	<div class="glass-card p-8 animate-slide-up" th:insert="~{admin/form :: form}">
+		<!-- El contenido del formulario se inserta aquí -->
+	</div>
+
 </div>
+
+<div layout:fragment="scripts">
+	<script>
+		// Animaciones de entrada
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fade-in, .animate-slide-up');
+            elements.forEach((el, i) => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    if (el.classList.contains('animate-fade-in')) {
+                        el.style.animation = 'fadeIn 0.8s ease-out forwards';
+                    } else {
+                        el.style.animation = 'slideUp 0.6s ease-out forwards';
+                    }
+                }, i * 200);
+            });
+        });
+
+        // Efecto de brillo en el título
+        const title = document.querySelector('h1 span');
+        if (title) {
+            title.style.background = 'linear-gradient(90deg, #D4AF37, #FFD700, #D4AF37)';
+            title.style.backgroundSize = '200% 100%';
+            title.style.animation = 'pulseGlow 4s ease-in-out infinite';
+        }
+	</script>
+</div>
+
 </body>
 </html>

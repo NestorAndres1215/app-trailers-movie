@@ -1,45 +1,192 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{master.html}">
+	  layout:decorate="~{master.html}"
+	  class="scroll-smooth">
 <head>
 	<meta charset="utf-8">
-	<title th:inline="text">Peliculas</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Películas - CinemaTrailer</title>
+
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
+	<script>
+		tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cinema-red': '#8B0000',
+                        'cinema-gold': '#D4AF37',
+                        'cinema-dark': '#121212',
+                        'cinema-gray': '#1a1a1a',
+                    },
+                    fontFamily: {
+                        'cinzel': ['Cinzel', 'serif'],
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'card-hover': 'cardHover 0.4s ease-out forwards',
+                        'shine': 'shine 1.5s infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        cardHover: {
+                            '0%': { transform: 'translateY(0) scale(1)', boxShadow: '0 10px 20px rgba(0,0,0,0.3)' },
+                            '100%': { transform: 'translateY(-10px) scale(1.03)', boxShadow: '0 25px 50px rgba(212,175,55,0.3)' }
+                        },
+                        shine: {
+                            '0%, 100%': { backgroundPosition: '-200% center' },
+                            '50%': { backgroundPosition: '200% center' }
+                        }
+                    }
+                }
+            }
+        }
+	</script>
+
+	<style>
+		.card-link {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            background: linear-gradient(135deg, #1a1a1a, #121212);
+            transition: all 0.4s ease;
+        }
+        .card-link::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent);
+            transition: 0.7s;
+            z-index: 0;
+        }
+        .card-link:hover::before {
+            left: 100%;
+        }
+        .card-link:hover {
+            animation: cardHover 0.4s ease-out forwards;
+            border-color: #D4AF37;
+        }
+        .card-img {
+            transition: transform 0.5s ease;
+            object-fit: cover;
+            height: 350px;
+        }
+        .card-link:hover .card-img {
+            transform: scale(1.08);
+        }
+        .card-title {
+            background: linear-gradient(to right, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .pagination-btn {
+            @apply px-4 py-2 rounded-lg font-medium transition-all duration-300;
+            background: rgba(26, 26, 26, 0.8);
+            color: #fff;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .pagination-btn:hover:not(.active) {
+            @apply bg-cinema-red/30 text-cinema-gold border-cinema-gold transform scale-105;
+        }
+        .pagination-btn.active {
+            @apply bg-cinema-gold text-cinema-dark font-bold;
+        }
+        .pagination-btn.disabled {
+            @apply opacity-50 cursor-not-allowed;
+        }
+	</style>
 </head>
-<body>
+<body class="bg-cinema-dark text-gray-100 min-h-screen">
 
-<div layout:fragment="content">
-	<h4>Todas las películas</h4>
+<div layout:fragment="content" class="max-w-7xl mx-auto px-4 py-24">
 
-	<div class="row">
-		<div class="row">
-			<div class="col-md-3 my-5" th:each="pelicula : ${peliculas}"
-				 th:object="${pelicula}">
-				<a th:href="@{/peliculas/{id}(id=*{id})}" class="card shadow-lg"
-				   style="text-decoration: none;"> <img
-						th:src="@{/assets/{filename}(filename=*{rutaPortada})}"
-						th:alt="*{titulo}" class="card-img-top">
-					<div class="card-body">
-						<h2 class="card-title fs-6" th:text="*{titulo}"></h2>
-						<p th:text="*{#temporals.format(fechaEstreno,'dd/MM/yyyy')}"
-						   class="text-muted small"></p>
+	<!-- Título -->
+	<div class="text-center mb-12 animate-fade-in-up">
+		<h1 class="text-5xl md:text-6xl font-cinzel font-bold mb-4">
+            <span class="bg-gradient-to-r from-cinema-gold to-yellow-400 bg-clip-text text-transparent">
+                Todas las Películas
+            </span>
+		</h1>
+		<p class="text-lg text-gray-300">Explora nuestra colección completa de trailers</p>
+	</div>
+
+	<!-- Grid de películas -->
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+		<div th:each="pelicula : ${peliculas}" th:object="${pelicula}"
+			 class="animate-fade-in-up card-link group"
+			 th:style="'animation-delay: ' + ${#lists.index(peliculas, pelicula)} * 0.1 + 's'">
+
+			<a th:href="@{/peliculas/{id}(id=*{id})}" class="block h-full">
+				<div class="relative overflow-hidden rounded-t-2xl">
+					<img th:src="@{/assets/{filename}(filename=*{rutaPortada})}"
+						 th:alt="*{titulo}"
+						 class="card-img w-full object-cover"
+						 loading="lazy">
+					<div class="absolute inset-0 bg-gradient-to-t from-cinema-dark via-transparent to-transparent opacity-70"></div>
+					<div class="absolute bottom-3 left-3 flex items-center gap-1 text-cinema-gold text-sm font-semibold">
+						<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+							<path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+							<path fill-rule="evenodd" d="M2 10c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7-8-3.134-8-7zm8-5a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd"/>
+						</svg>
+						<span th:text="*{#temporals.format(fechaEstreno,'dd/MM/yyyy')}">01/01/2025</span>
 					</div>
-				</a>
-			</div>
-		</div>
-		<div class="row mt-5" th:with="page=${peliculas}">
-			<div class="col-sm-6">
-				<div sd:pagination-sumary></div>
-				<div class="col-sm-6">
-					<nav>
-						<ul class="pagination" sd:pagination="full"></ul>
-					</nav>
 				</div>
-			</div>
+
+				<div class="p-4">
+					<h3 class="card-title text-lg font-cinzel font-bold line-clamp-2" th:text="*{titulo}">
+						Título de la Película
+					</h3>
+					<p class="text-sm text-gray-400 mt-1 line-clamp-1" th:text="*{genero}">Acción</p>
+				</div>
+			</a>
 		</div>
 	</div>
+
+	<!-- Paginación -->
+	<div class="mt-12 flex flex-col sm:flex-row justify-between items-center gap-4" th:with="page=${peliculas}">
+		<!-- Resumen -->
+		<div class="text-sm text-gray-400">
+			<span sd:pagination-sumary></span>
+		</div>
+
+		<!-- Botones de paginación -->
+		<nav class="flex gap-2" aria-label="Paginación">
+			<ul class="pagination inline-flex items-center gap-1" sd:pagination="full">
+				<!-- Los botones se generan automáticamente por Spring Data + Thymeleaf -->
+				<!-- Ejemplo de estructura generada: -->
+				<!-- <li><a th:href="..." class="pagination-btn">1</a></li> -->
+			</ul>
+		</nav>
+	</div>
+
 </div>
 
+<!-- Scripts -->
+<script>
+	// Animación de entrada escalonada
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.animate-fade-in-up').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.animationDelay = `${i * 0.1}s`;
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.animation = 'fadeInUp 0.8s ease-out forwards';
+            }, 100);
+        });
+    });
+</script>
 
 </body>
 </html>

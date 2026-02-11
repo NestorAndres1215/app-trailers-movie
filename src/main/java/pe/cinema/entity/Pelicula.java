@@ -2,20 +2,16 @@ package pe.cinema.entity;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.multipart.MultipartFile;
-
 import lombok.*;
 
 @Entity
 @Table(name = "pelicula")
-@Data // Getters, setters, toString, equals, hashCode
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -43,7 +39,7 @@ public class Pelicula {
     @NotBlank(message = "El ID de YouTube del tráiler es obligatorio")
     private String youtubeTrailerId;
 
-    private String rutaPortada; // ruta de la imagen en servidor
+    private String rutaPortada;
 
     @NotEmpty(message = "Debe seleccionar al menos un género")
     @ManyToMany(fetch = FetchType.LAZY)
@@ -55,5 +51,5 @@ public class Pelicula {
     private List<Genero> generos;
 
     @Transient
-    private MultipartFile portada; // archivo temporal para subir portada
+    private MultipartFile portada;
 }

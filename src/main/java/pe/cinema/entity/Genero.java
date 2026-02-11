@@ -10,18 +10,18 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "genero")
-@Data // Genera getters, setters, toString, equals, hashCode
-@NoArgsConstructor // Constructor sin argumentos
-@AllArgsConstructor // Constructor con todos los campos
-@Builder // Para usar patrón builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Genero {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // ID autoincremental
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_genero")
 	private Integer id;
 
-	@Column(nullable = false, unique = true) // único y obligatorio
+	@Column(nullable = false, unique = true)
 	@NotBlank(message = "El título del género no puede estar vacío")
 	private String titulo;
 

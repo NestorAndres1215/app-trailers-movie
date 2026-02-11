@@ -1,67 +1,181 @@
 <!DOCTYPE html>
-<html lang="es"
-	  xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="es" class="scroll-smooth">
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>CinemaTrailer</title>
-	<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-			crossorigin="anonymous">
 
-	<link rel="stylesheet"
-		  href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
-	<link
-			href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-			rel="stylesheet" />
+	<!-- Tailwind CSS CDN -->
+	<script src="https://cdn.tailwindcss.com"></script>
 
-	<style>
-		form .invalid-feedback {
-            display: block;
+	<!-- Heroicons (iconos) -->
+	<script src="https://unpkg.com/heroicons@2.1.1/dist/heroicons.min.js"></script>
+
+	<script>
+		tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cinema-red': '#8B0000',
+                        'cinema-gold': '#D4AF37',
+                        'cinema-dark': '#121212',
+                        'cinema-gray': '#1a1a1a',
+                    },
+                    fontFamily: {
+                        'cinzel': ['Cinzel', 'serif'],
+                        'montserrat': ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'shine': 'shine 1.5s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        shine: {
+                            '0%, 100%': { backgroundPosition: '-200% center' },
+                            '50%': { backgroundPosition: '200% center' }
+                        }
+                    }
+                }
+            }
         }
-	</style>
-</head>
-<body>
+	</script>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	<div class="container-fluid">
-		<a class="navbar-brand" href="/">CinemaTrailer</a>
-		<button class="navbar-toggler" type="button"
-				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-				aria-controls="navbarSupportedContent" aria-expanded="false"
-				aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
-				<li class="nav-item"><a class="nav-link" href="/peliculas">Peliculas</a></li>
-				<li class="nav-item"><a class="nav-link" href="/admin">Administración</a></li>
-			</ul>
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-cinema-dark text-gray-100 min-h-screen font-montserrat">
+
+<!-- NAVBAR con Tailwind + Iconos + Animaciones -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-cinema-dark via-cinema-red/90 to-cinema-dark backdrop-blur-lg border-b border-cinema-gold/30 shadow-2xl">
+	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="flex items-center justify-between h-16">
+
+			<!-- Logo -->
+			<a href="/" class="flex items-center space-x-2 group transition-all duration-300 hover:scale-105">
+				<svg class="w-8 h-8 text-cinema-gold group-hover:animate-spin-slow" fill="currentColor" viewBox="0 0 24 24">
+					<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16z"/>
+					<path d="M15.5 8.5l-7 4 7 4v-8z"/>
+				</svg>
+				<span class="text-2xl font-cinzel font-bold bg-gradient-to-r from-cinema-gold to-yellow-400 bg-clip-text text-transparent">
+                    CinemaTrailer
+                </span>
+			</a>
+
+			<!-- Menu Desktop -->
+			<div class="hidden md:flex items-center space-x-1">
+				<a href="/" class="nav-link flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300">
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+					<span>Inicio</span>
+				</a>
+				<a href="/peliculas" class="nav-link flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300">
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+					<span>Películas</span>
+				</a>
+				<a href="/admin" class="nav-link flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300">
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+					<span>Administración</span>
+				</a>
+			</div>
+
+			<!-- Mobile menu button -->
+			<button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-cinema-red/30 transition-all duration-300">
+				<svg class="w-6 h-6 text-cinema-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+				</svg>
+			</button>
+		</div>
+	</div>
+
+	<!-- Mobile Menu -->
+	<div id="mobile-menu" class="hidden md:hidden bg-cinema-dark/95 backdrop-blur-xl border-t border-cinema-gold/20">
+		<div class="px-4 pt-2 pb-3 space-y-1">
+			<a href="/" class="mobile-nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300">
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+				<span>Inicio</span>
+			</a>
+			<a href="/peliculas" class="mobile-nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300">
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+				<span>Películas</span>
+			</a>
+			<a href="/admin" class="mobile-nav-link flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300">
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+				<span>Administración</span>
+			</a>
 		</div>
 	</div>
 </nav>
 
-<div layout:fragment="content" class="container my-5">
+<!-- Contenido principal -->
+<div layout:fragment="content" class="container mx-auto px-4 py-24">
+	<!-- Aquí va el contenido de cada página -->
 </div>
 
-<script
-		src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<!-- Scripts Tailwind -->
+<script>
+	// Mobile menu toggle
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
 
-<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-		crossorigin="anonymous"></script>
+    // Resaltar enlace activo
+    document.addEventListener('DOMContentLoaded', function () {
+        const current = location.pathname;
+        document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+            link.classList.remove('active');
+            const href = link.getAttribute('href');
+            if (href === current || (current.startsWith('/peliculas') && href === '/peliculas') || (current.startsWith('/admin') && href === '/admin')) {
+                link.classList.add('active');
+            }
+        });
+    });
 
-<script
-		src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-<script
-		src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    // Animación de brillo en hover
+    document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            this.style.background = 'linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent)';
+            this.style.backgroundSize = '200% 100%';
+            this.style.animation = 'shine 1.5s infinite';
+        });
+        link.addEventListener('mouseleave', function() {
+            this.style.background = '';
+            this.style.animation = '';
+        });
+    });
+</script>
 
-<div layout:fragment="scripts" th:remove="tag">
+<style>
+	.nav-link, .mobile-nav-link {
+        position: relative;
+        overflow: hidden;
+    }
+    .nav-link:hover, .mobile-nav-link:hover,
+    .nav-link.active, .mobile-nav-link.active {
+        @apply text-cinema-gold bg-cinema-red/20 shadow-lg transform -translate-y-0.5;
+    }
+    .nav-link::before, .mobile-nav-link::before {
+        content: '';
+        @apply absolute inset-0 bg-gradient-to-r from-transparent via-cinema-gold/20 to-transparent -translate-x-full transition-transform duration-700;
+    }
+    .nav-link:hover::before, .mobile-nav-link:hover::before {
+        transform: translateX(100%);
+    }
+    @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+        animation: spin-slow 3s linear infinite;
+    }
+</style>
 
-</div>
+<div layout:fragment="scripts" th:remove="tag"></div>
 </body>
 </html>
