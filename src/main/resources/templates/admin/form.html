@@ -7,12 +7,9 @@
     <meta charset="utf-8">
 </head>
 <body>
-
-<!-- Fragmento que se insertará en master -->
 <div layout:fragment="content" class="container-fluid py-5">
-    <!-- Card blanco con más ancho -->
-    <div class="card shadow-lg mx-auto" style="max-width: 1200px; background-color: #fff;">
-        <div class="card-body p-5">
+
+
             <h2 class="text-center text-danger mb-4">Registro de Película</h2>
             <form action="" method="post" th:object="${pelicula}" enctype="multipart/form-data">
                 <div class="row g-4">
@@ -55,9 +52,9 @@
                     </div>
                 </div>
             </form>
-        </div>
+
     </div>
-</div>
+
 
 </body>
 </html>
