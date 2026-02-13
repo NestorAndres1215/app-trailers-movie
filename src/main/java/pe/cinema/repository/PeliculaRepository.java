@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface PeliculaRepositorio extends JpaRepository<Pelicula, Integer> {
+public interface PeliculaRepository extends JpaRepository<Pelicula, Integer> {
 
     List<Pelicula> findByTituloContainingIgnoreCase(String titulo);
 

@@ -3,7 +3,7 @@ package pe.cinema.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pe.cinema.entity.Genero;
-import pe.cinema.repository.GeneroRepositorio;
+import pe.cinema.repository.GeneroRepository;
 import pe.cinema.service.GeneroService;
 import pe.cinema.util.AppConstants;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GeneroServiceImpl implements GeneroService {
 
-    private final GeneroRepositorio generoRepositorio;
+    private final GeneroRepository generoRepositorio;
 
     public List<Genero> listarTodos() {
         return generoRepositorio.findAll();

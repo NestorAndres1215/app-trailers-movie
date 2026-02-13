@@ -21,7 +21,7 @@ public interface PeliculaService {
 
     List<Pelicula> buscarPorTitulo(String titulo);
 
-    void eliminarPelicula(Integer id);
+    Pelicula eliminarPelicula(Integer id);
 
     List<Pelicula> buscarPorFechaEstreno(LocalDate fechaEstreno);
 

@@ -3,14 +3,13 @@ package pe.cinema.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pe.cinema.entity.Genero;
 import pe.cinema.entity.Pelicula;
 import pe.cinema.excepciones.AlmacenExcepcion;
-import pe.cinema.repository.GeneroRepositorio;
-import pe.cinema.repository.PeliculaRepositorio;
+import pe.cinema.repository.GeneroRepository;
+import pe.cinema.repository.PeliculaRepository;
 import pe.cinema.service.AlmacenService;
 import pe.cinema.service.PeliculaService;
 import pe.cinema.util.AppConstants;
@@ -23,8 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PeliculaServiceImpl implements PeliculaService {
 
-    private final PeliculaRepositorio peliculaRepositorio;
-    private final GeneroRepositorio generoRepositorio;
+    private final PeliculaRepository peliculaRepositorio;
+    private final GeneroRepository generoRepositorio;
     private final AlmacenService almacenServicio;
 
     @Override
@@ -93,14 +92,16 @@ public class PeliculaServiceImpl implements PeliculaService {
     }
 
     @Override
-    public void eliminarPelicula(Integer id) {
-        Pelicula pelicula = obtenerPorId(id);
+    public Pelicula eliminarPelicula(Integer id) {
+      Pelicula pelicula = obtenerPorId(id);
 
         if (StringUtils.hasText(pelicula.getRutaPortada())) {
             almacenServicio.eliminarArchivo(pelicula.getRutaPortada());
         }
 
         peliculaRepositorio.delete(pelicula);
+
+        return pelicula;
     }
 
     @Override

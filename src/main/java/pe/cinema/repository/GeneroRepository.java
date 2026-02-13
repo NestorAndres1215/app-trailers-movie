@@ -7,6 +7,6 @@ import pe.cinema.entity.Genero;
 import java.util.Optional;
 
 
-public interface GeneroRepositorio extends JpaRepository<Genero, Integer>{
+public interface GeneroRepository extends JpaRepository<Genero, Integer>{
     Optional<Genero> findByTitulo(String titulo);
 }
