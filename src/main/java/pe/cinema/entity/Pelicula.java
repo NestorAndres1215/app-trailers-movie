@@ -32,13 +32,15 @@ public class Pelicula {
 
     @Column(nullable = false)
     @NotNull(message = "La fecha de estreno es obligatoria")
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaEstreno;
 
     @Column(nullable = false)
     @NotBlank(message = "El ID de YouTube del tráiler es obligatorio")
     private String youtubeTrailerId;
 
+    @Column(nullable = false)
+    @NotBlank(message = "La ruta de la portada es obligatoria")
     private String rutaPortada;
 
     @NotEmpty(message = "Debe seleccionar al menos un género")

@@ -7,11 +7,14 @@ import pe.cinema.entity.Pelicula;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
-public interface PeliculaRepositorio extends JpaRepository<Pelicula, Integer>{
+public interface PeliculaRepositorio extends JpaRepository<Pelicula, Integer> {
 
     List<Pelicula> findByTituloContainingIgnoreCase(String titulo);
+
+    Optional<Pelicula> findByTitulo(String titulo);
 
     List<Pelicula> findByFechaEstreno(LocalDate fechaEstreno);
 

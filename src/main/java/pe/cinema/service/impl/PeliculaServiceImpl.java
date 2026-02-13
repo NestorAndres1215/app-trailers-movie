@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pe.cinema.entity.Genero;
 import pe.cinema.entity.Pelicula;
+import pe.cinema.excepciones.AlmacenExcepcion;
 import pe.cinema.repository.GeneroRepositorio;
 import pe.cinema.repository.PeliculaRepositorio;
 import pe.cinema.service.AlmacenService;
@@ -16,6 +17,7 @@ import pe.cinema.util.AppConstants;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class PeliculaServiceImpl implements PeliculaService {
 
     @Override
     public List<Genero> listarGeneros() {
-        return generoRepositorio.findAll(Sort.by("titulo"));
+        return generoRepositorio.findAll();
     }
 
     @Override
@@ -62,6 +64,8 @@ public class PeliculaServiceImpl implements PeliculaService {
     @Override
     public Pelicula actualizarPelicula(Integer id, Pelicula pelicula) {
 
+      validarTituloUnico(id, pelicula.getTitulo());
+
         Pelicula peliculaDB = obtenerPorId(id);
 
         peliculaDB.setTitulo(pelicula.getTitulo());
@@ -79,6 +83,13 @@ public class PeliculaServiceImpl implements PeliculaService {
         }
 
         return peliculaRepositorio.save(peliculaDB);
+    }
+
+    private void validarTituloUnico(Integer id, String titulo) {
+        Optional<Pelicula> peliculaExistente = peliculaRepositorio.findByTitulo(titulo);
+        if (peliculaExistente.isPresent() && !peliculaExistente.get().getId().equals(id)) {
+            throw new AlmacenExcepcion("❌ Ya existe una película con el título: " + titulo);
+        }
     }
 
     @Override
@@ -104,7 +115,6 @@ public class PeliculaServiceImpl implements PeliculaService {
 
     @Override
     public List<Pelicula> buscarPorGeneros(List<Genero> generos) {
-
         return peliculaRepositorio.findByGenerosIn(generos);
     }
 

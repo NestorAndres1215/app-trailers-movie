@@ -3,34 +3,33 @@
         }
 
 .navbar {
-    background-color: #141414 !important; /* negro oscuro estilo Netflix */
+    background-color: #141414 !important;
     padding: 0.8rem 2rem;
 }
 
 .navbar .navbar-brand {
-    color: #e50914; /* rojo Netflix */
+    color: #e50914;
     font-weight: bold;
     font-size: 1.5rem;
 }
 
 .navbar .nav-link {
-    color: #fff; /* blanco */
+    color: #fff;
     font-weight: 500;
     transition: color 0.3s, transform 0.2s;
 }
 
 .navbar .nav-link:hover {
-    color: #e50914; /* rojo al estilo Netflix */
-    transform: scale(1.05); /* pequeño efecto de agrandado */
+    color: #e50914;
+    transform: scale(1.05);
 }
 
 
 .navbar .nav-link i {
-    color: #fff; /* iconos blancos */
+    color: #fff;
     transition: color 0.3s;
 }
 
-/* Hover de iconos */
 .navbar .nav-link:hover i {
     color: #e50914;
 }
