@@ -20,6 +20,7 @@ import pe.cinema.excepciones.AlmacenExcepcion;
 import pe.cinema.service.AlmacenService;
 import pe.cinema.util.AppConstants;
 
+import javax.annotation.PostConstruct;
 
 @Service
 public class AlmacenServiceImpl implements AlmacenService {
@@ -28,6 +29,17 @@ public class AlmacenServiceImpl implements AlmacenService {
 	private String storageLocation;
 
 	private Path storagePath;
+
+	@PostConstruct
+	public void init() {
+		this.storagePath = Paths.get(storageLocation).toAbsolutePath().normalize();
+		try {
+			Files.createDirectories(this.storagePath);
+		} catch (IOException e) {
+			throw new AlmacenExcepcion("No se pudo crear el directorio de almacenamiento");
+		}
+	}
+
 	@Override
 	public String almacenarArchivo(MultipartFile archivo) {
 
@@ -47,10 +59,12 @@ public class AlmacenServiceImpl implements AlmacenService {
 		return nombreArchivo;
 	}
 
+	@Override
 	public Path cargarArchivo(String nombreArchivo) {
 		return storagePath.resolve(nombreArchivo).normalize();
 	}
-@Override
+
+	@Override
 	public Resource cargarComoRecurso(String nombreArchivo) {
 		try {
 			Path archivo = cargarArchivo(nombreArchivo);
@@ -65,7 +79,8 @@ public class AlmacenServiceImpl implements AlmacenService {
 			throw new AlmacenExcepcion(String.format(AppConstants.ARCHIVO_NO_ENCONTRADO, nombreArchivo));
 		}
 	}
-@Override
+
+	@Override
 	public void eliminarArchivo(String nombreArchivo) {
 		Path archivo = cargarArchivo(nombreArchivo);
 		try {

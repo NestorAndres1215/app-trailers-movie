@@ -10,8 +10,11 @@
 <body>
 
 <div layout:fragment="content">
-	<h2>Registro de película</h2>
-	<br>
+	<div class="text-center my-4">
+		<h2 class="text-danger">Registro de película</h2>
+		<hr class="border-danger border-2 w-50 mx-auto">
+	</div>
+
 	<div th:insert="admin/form :: form">
 	</div>
 </div>
