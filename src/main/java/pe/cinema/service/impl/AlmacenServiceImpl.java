@@ -36,7 +36,7 @@ public class AlmacenServiceImpl implements AlmacenService {
 		try {
 			Files.createDirectories(this.storagePath);
 		} catch (IOException e) {
-			throw new AlmacenExcepcion("No se pudo crear el directorio de almacenamiento");
+			throw new AlmacenExcepcion(AppConstants.ERROR_INICIALIZAR_ALMACEN);
 		}
 	}
 
@@ -46,14 +46,14 @@ public class AlmacenServiceImpl implements AlmacenService {
 		String nombreArchivo = StringUtils.cleanPath(archivo.getOriginalFilename());
 
 		if (nombreArchivo.contains("..")) {
-			throw new AlmacenExcepcion(String.format(AppConstants.NOMBRE_ARCHIVO_INVALIDO, nombreArchivo));
+			throw new AlmacenExcepcion(AppConstants.NOMBRE_ARCHIVO_INVALIDO);
 		}
 
 		try (InputStream inputStream = archivo.getInputStream()) {
 			Path destino = storagePath.resolve(nombreArchivo);
 			Files.copy(inputStream, destino, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			throw new AlmacenExcepcion(String.format(AppConstants.ERROR_ALMACENAR_ARCHIVO, nombreArchivo));
+			throw new AlmacenExcepcion(AppConstants.ERROR_ALMACENAR_ARCHIVO);
 		}
 
 		return nombreArchivo;
@@ -73,12 +73,13 @@ public class AlmacenServiceImpl implements AlmacenService {
 			if (recurso.exists() && recurso.isReadable()) {
 				return recurso;
 			} else {
-				throw new AlmacenExcepcion("El archivo no existe o no se puede leer");
+				throw new AlmacenExcepcion(AppConstants.ARCHIVO_NO_ENCONTRADO);
 			}
 		} catch (MalformedURLException e) {
-			throw new AlmacenExcepcion("El archivo no existe o no se puede leer");
+			throw new AlmacenExcepcion(AppConstants.ARCHIVO_NO_ENCONTRADO);
 		}
 	}
+
 
 	@Override
 	public void eliminarArchivo(String nombreArchivo) {
@@ -88,7 +89,7 @@ public class AlmacenServiceImpl implements AlmacenService {
 				FileSystemUtils.deleteRecursively(archivo);
 			}
 		} catch (IOException e) {
-			throw new AlmacenExcepcion(String.format(AppConstants.ERROR_ELIMINAR_ARCHIVO, nombreArchivo));
+			throw new AlmacenExcepcion(AppConstants.ERROR_ELIMINAR_ARCHIVO);
 		}
 	}
 }

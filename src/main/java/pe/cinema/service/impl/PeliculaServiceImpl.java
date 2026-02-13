@@ -39,7 +39,22 @@ public class PeliculaServiceImpl implements PeliculaService {
     @Override
     public Pelicula guardarPelicula(Pelicula pelicula) {
 
+        peliculaRepositorio.findByTitulo(pelicula.getTitulo())
+                .ifPresent(p -> {
+                    throw new AlmacenExcepcion(AppConstants.PELICULA_NO_ENCONTRADA);
+                });
+
+        pelicula.getGeneros().forEach(genero -> {
+            if (!generoRepositorio.existsById(genero.getId())) {
+                throw new AlmacenExcepcion(AppConstants.GENERO_NO_ENCONTRADO);
+            }
+        });
+
+        if (pelicula.getPortada() == null || pelicula.getPortada().isEmpty()) {
+            throw new AlmacenExcepcion(AppConstants.PELICULA_PORTADA_OBLIGATORIA);
+        }
         String rutaPortada = almacenServicio.almacenarArchivo(pelicula.getPortada());
+
 
         Pelicula peliculaAGuardar = Pelicula.builder()
                 .titulo(pelicula.getTitulo())
@@ -63,7 +78,7 @@ public class PeliculaServiceImpl implements PeliculaService {
     @Override
     public Pelicula actualizarPelicula(Integer id, Pelicula pelicula) {
 
-      validarTituloUnico(id, pelicula.getTitulo());
+        validarTituloUnico(id, pelicula.getTitulo());
 
         Pelicula peliculaDB = obtenerPorId(id);
 
@@ -83,17 +98,17 @@ public class PeliculaServiceImpl implements PeliculaService {
 
         return peliculaRepositorio.save(peliculaDB);
     }
-
     private void validarTituloUnico(Integer id, String titulo) {
         Optional<Pelicula> peliculaExistente = peliculaRepositorio.findByTitulo(titulo);
         if (peliculaExistente.isPresent() && !peliculaExistente.get().getId().equals(id)) {
-            throw new AlmacenExcepcion("❌ Ya existe una película con el título: " + titulo);
+            throw new AlmacenExcepcion(AppConstants.PELICULA_TITULO_EXISTE);
         }
     }
 
+
     @Override
     public Pelicula eliminarPelicula(Integer id) {
-      Pelicula pelicula = obtenerPorId(id);
+        Pelicula pelicula = obtenerPorId(id);
 
         if (StringUtils.hasText(pelicula.getRutaPortada())) {
             almacenServicio.eliminarArchivo(pelicula.getRutaPortada());

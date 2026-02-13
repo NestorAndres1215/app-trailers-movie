@@ -1,22 +1,22 @@
 package pe.cinema.util;
 public class AppConstants {
 
-    public static final String PELICULA_NO_ENCONTRADA = "Película no encontrada con ID: %d";
-    public static final String PELICULA_PORTADA_OBLIGATORIA = "La portada de la película es obligatoria";
-    public static final String PELICULA_FECHA_BUSQUEDA = "Debe proporcionar una fecha de estreno para buscar";
-    public static final String PELICULA_GENERO_BUSQUEDA = "Debe proporcionar al menos un género para buscar";
+    public static final String PELICULA_NO_ENCONTRADA = "PELÍCULA NO ENCONTRADA";
+    public static final String PELICULA_PORTADA_OBLIGATORIA = "LA PORTADA DE LA PELÍCULA ES OBLIGATORIA";
+    public static final String PELICULA_FECHA_BUSQUEDA = "DEBE PROPORCIONAR UNA FECHA DE ESTRENO PARA BUSCAR";
+    public static final String PELICULA_GENERO_BUSQUEDA = "DEBE PROPORCIONAR AL MENOS UN GÉNERO PARA BUSCAR";
 
+    public static final String GENERO_NO_ENCONTRADO = "GÉNERO NO ENCONTRADO";
+    public static final String GENERO_NO_ENCONTRADO_TITULO = "GÉNERO NO ENCONTRADO CON ESE TÍTULO";
+    public static final String GENERO_EXISTE = "EL GÉNERO YA EXISTE";
 
-    public static final String GENERO_NO_ENCONTRADO = "Género no encontrado con ID: %d";
-    public static final String GENERO_NO_ENCONTRADO_TITULO = "Género no encontrado con título: %s";
-    public static final String GENERO_EXISTE = "El género ya existe: %s";
-
-    public static final String ARCHIVO_VACIO = "No se puede almacenar un archivo vacío o nulo";
-    public static final String NOMBRE_ARCHIVO_INVALIDO = "Nombre de archivo inválido: %s";
-    public static final String ERROR_ALMACENAR_ARCHIVO = "Error al almacenar el archivo %s";
-    public static final String ERROR_ELIMINAR_ARCHIVO = "Error al eliminar el archivo: %s";
-    public static final String NOMBRE_ARCHIVO_OBLIGATORIO = "El nombre del archivo no puede ser vacío";
-    public static final String ARCHIVO_NO_ENCONTRADO = "No se pudo encontrar el archivo: %s";
-    public static final String ERROR_INICIALIZAR_ALMACEN = "Error al inicializar el almacenamiento de archivos";
+    public static final String PELICULA_TITULO_EXISTE = "YA EXISTE UNA PELÍCULA CON ESTE TÍTULO";
+    public static final String ARCHIVO_VACIO = "NO SE PUEDE ALMACENAR UN ARCHIVO VACÍO O NULO";
+    public static final String NOMBRE_ARCHIVO_INVALIDO = "NOMBRE DE ARCHIVO INVÁLIDO";
+    public static final String ERROR_ALMACENAR_ARCHIVO = "ERROR AL ALMACENAR EL ARCHIVO";
+    public static final String ERROR_ELIMINAR_ARCHIVO = "ERROR AL ELIMINAR EL ARCHIVO";
+    public static final String NOMBRE_ARCHIVO_OBLIGATORIO = "EL NOMBRE DEL ARCHIVO NO PUEDE SER VACÍO";
+    public static final String ARCHIVO_NO_ENCONTRADO = "NO SE PUDO ENCONTRAR EL ARCHIVO";
+    public static final String ERROR_INICIALIZAR_ALMACEN = "ERROR AL INICIALIZAR EL ALMACENAMIENTO DE ARCHIVOS";
 
 }
