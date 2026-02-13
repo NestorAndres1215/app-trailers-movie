@@ -18,14 +18,12 @@
 		</div>
 		<div class="col-md-6">
 			<div class="text-end my-3">
-				<a
-						th:href="@{https://www.youtube.com/watch?v={youtubeId}(youtubeId=*{youtubeTrailerId})}"
+				<a th:href="@{https://www.youtube.com/watch?v={youtubeId}(youtubeId=*{youtubeTrailerId})}"
 						class="btn btn-danger"
 						data-fancybox="">
 					<i class="fas fa-film me-2"></i> Ver trailer
 				</a>
 			</div>
-
 			<h2 th:text="*{titulo}"></h2>
 			<div class="mb-3">
 					<span class="badge rounded-pull bg-light text-dark me-1"
