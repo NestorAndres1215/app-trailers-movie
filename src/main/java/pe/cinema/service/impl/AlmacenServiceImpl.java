@@ -73,10 +73,10 @@ public class AlmacenServiceImpl implements AlmacenService {
 			if (recurso.exists() && recurso.isReadable()) {
 				return recurso;
 			} else {
-				throw new AlmacenExcepcion(String.format(AppConstants.ARCHIVO_NO_ENCONTRADO, nombreArchivo));
+				throw new AlmacenExcepcion("El archivo no existe o no se puede leer");
 			}
 		} catch (MalformedURLException e) {
-			throw new AlmacenExcepcion(String.format(AppConstants.ARCHIVO_NO_ENCONTRADO, nombreArchivo));
+			throw new AlmacenExcepcion("El archivo no existe o no se puede leer");
 		}
 	}
 
