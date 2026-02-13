@@ -1,192 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{master.html}"
-	  class="scroll-smooth">
+	  layout:decorate="~{master.html}">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Inicio - CinemaTrailer</title>
-
-	<!-- Tailwind CSS CDN -->
-	<script src="https://cdn.tailwindcss.com"></script>
-
-	<!-- Google Fonts -->
-	<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-
-	<script>
-		tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'cinema-red': '#8B0000',
-                        'cinema-gold': '#D4AF37',
-                        'cinema-dark': '#121212',
-                        'cinema-gray': '#1a1a1a',
-                    },
-                    fontFamily: {
-                        'cinzel': ['Cinzel', 'serif'],
-                        'montserrat': ['Montserrat', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-                        'card-hover': 'cardHover 0.4s ease-out forwards',
-                        'shine': 'shine 1.5s infinite',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(30px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        },
-                        cardHover: {
-                            '0%': { transform: 'translateY(0) scale(1)', boxShadow: '0 10px 20px rgba(0,0,0,0.3)' },
-                            '100%': { transform: 'translateY(-10px) scale(1.03)', boxShadow: '0 25px 50px rgba(212,175,55,0.3)' }
-                        },
-                        shine: {
-                            '0%, 100%': { backgroundPosition: '-200% center' },
-                            '50%': { backgroundPosition: '200% center' }
-                        }
-                    }
-                }
-            }
-        }
-	</script>
-
-	<style>
-		.card-link {
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 16px;
-            background: linear-gradient(135deg, #1a1a1a, #121212);
-        }
-        .card-link::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent);
-            transition: 0.7s;
-            z-index: 0;
-        }
-        .card-link:hover::before {
-            left: 100%;
-        }
-        .card-link:hover {
-            animation: cardHover 0.4s ease-out forwards;
-            border-color: #D4AF37;
-        }
-        .card-img {
-            transition: transform 0.5s ease;
-            object-fit: cover;
-            height: 350px;
-        }
-        .card-link:hover .card-img {
-            transform: scale(1.08);
-        }
-        .card-title {
-            background: linear-gradient(to right, #D4AF37, #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-	</style>
+	<title>Inicio</title>
 </head>
-<body class="bg-cinema-dark text-gray-100 min-h-screen">
+<body>
 
-<div layout:fragment="content" class="max-w-7xl mx-auto px-4 py-24">
-
-	<!-- Hero Section -->
-	<div class="text-center mb-16 animate-fade-in-up" style="animation-delay: 0.2s;">
-		<h1 class="text-5xl md:text-7xl font-cinzel font-bold mb-4">
-            <span class="bg-gradient-to-r from-cinema-gold to-yellow-400 bg-clip-text text-transparent">
-                Bienvenido a CinemaTrailer
-            </span>
-		</h1>
-		<p class="text-xl md:text-2xl text-gray-300 font-montserrat">
-			Disfruta de tus <span class="text-cinema-gold font-semibold">trailers favoritos</span> sin costo alguno
-		</p>
-		<div class="mt-8 flex justify-center gap-4">
-			<a href="/peliculas" class="inline-flex items-center gap-2 px-8 py-3 bg-cinema-red hover:bg-red-900 text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-cinema-gold/30 hover:scale-105">
-				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-6.718-3.874A1 1 0 007 8.122v7.756a1 1 0 001.034.968l6.718-3.874a1 1 0 000-1.796z"/>
-				</svg>
-				Ver Trailers
-			</a>
-		</div>
+<div layout:fragment="content">
+	<div class="bg-light p-5 rounded">
+		<h1 class="display-1 text-success">Bienvenido a CinemaTrailer</h1>
+		<h2>Disfruta de tus trailers favoritos sin costo alguno</h2>
 	</div>
 
-	<!-- Últimos Estrenos -->
-	<div class="mt-20">
-		<h2 class="text-3xl md:text-4xl font-cinzel font-bold mb-10 flex items-center gap-3">
-			<svg class="w-8 h-8 text-cinema-gold" fill="currentColor" viewBox="0 0 20 20">
-				<path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
-				<path d="M7 9l3 2 3-2"/>
-			</svg>
-			<span class="bg-gradient-to-r from-cinema-gold to-yellow-400 bg-clip-text text-transparent">
-                Últimos Estrenos
-            </span>
-		</h2>
+	<h4 class="text-danger mt-5">Últimos estrenos</h4>
 
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-			<!-- Tarjeta de película -->
-			<div th:each="pelicula : ${ultimasPeliculas}" th:object="${pelicula}"
-				 class="animate-fade-in-up card-link group"
-				 th:style="'animation-delay: ' + ${#lists.index(ultimasPeliculas, pelicula)} * 0.1 + 's'">
-
-				<a th:href="@{/peliculas/{id}(id=*{id})}" class="block h-full">
-					<div class="relative overflow-hidden rounded-t-2xl">
-						<img th:src="@{/assets/{filename}(filename=*{rutaPortada})}"
-							 th:alt="*{titulo}"
-							 class="card-img w-full h-64 object-cover"
-							 loading="lazy">
-						<div class="absolute inset-0 bg-gradient-to-t from-cinema-dark via-transparent to-transparent opacity-60"></div>
-						<div class="absolute bottom-3 left-3 flex items-center gap-1 text-cinema-gold text-sm font-semibold">
-							<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-								<path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-								<path fill-rule="evenodd" d="M2 10c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7-8-3.134-8-7zm8-5a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd"/>
-							</svg>
-							<span th:text="*{#temporals.format(fechaEstreno,'dd/MM/yyyy')}">01/01/2025</span>
-						</div>
-					</div>
-
-					<div class="p-4">
-						<h3 class="card-title text-lg font-cinzel font-bold line-clamp-2" th:text="*{titulo}">
-							Título de la Película
-						</h3>
-						<p class="text-sm text-gray-400 mt-1 line-clamp-2" th:text="*{genero}">Acción, Aventura</p>
-					</div>
-				</a>
-			</div>
-		</div>
-
-		<!-- Ver más -->
-		<div class="text-center mt-12">
-			<a href="/peliculas" class="inline-flex items-center gap-2 text-cinema-gold hover:text-yellow-400 font-semibold transition-colors">
-				Ver todas las películas
-				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-				</svg>
+	<div class="row">
+		<div class="col-md-3 my-5" th:each="pelicula : ${ultimasPeliculas}" th:object="${pelicula}">
+			<a th:href="@{/peliculas/{id}(id=*{id})}" class="card shadow-lg" style="text-decoration:none;">
+				<img th:src="@{/assets/{filename}(filename=*{rutaPortada})}" th:alt="*{titulo}" class="card-img-top">
+				<div class="card-body">
+					<h2 class="card-title fs-6" th:text="*{titulo}"></h2>
+					<p th:text="*{#temporals.format(fechaEstreno,'dd/MM/yyyy')}" class="text-muted small"></p>
+				</div>
 			</a>
 		</div>
 	</div>
 </div>
-
-<!-- Scripts -->
-<script>
-	// Animación de entrada progresiva
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.animate-fade-in-up').forEach((el, i) => {
-            el.style.opacity = '0';
-            el.style.animationDelay = `${i * 0.1}s`;
-            setTimeout(() => {
-                el.style.opacity = '1';
-                el.style.animation = 'fadeInUp 0.8s ease-out forwards';
-            }, 100);
-        });
-    });
-</script>
-
 </body>
 </html>

@@ -1,228 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{master.html}"
-	  class="scroll-smooth">
+	  layout:decorate="~{master.html}">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Administrar Películas - CinemaTrailer</title>
-
-	<!-- Tailwind CSS -->
-	<script src="https://cdn.tailwindcss.com"></script>
-
-	<!-- Fancybox -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-
-	<!-- Google Fonts -->
-	<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-
-	<script>
-		tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'cinema-red': '#8B0000',
-                        'cinema-gold': '#D4AF37',
-                        'cinema-dark': '#121212',
-                        'cinema-gray': '#1a1a1a',
-                    },
-                    fontFamily: {
-                        'cinzel': ['Cinzel', 'serif'],
-                        'montserrat': ['Montserrat', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.8s ease-out',
-                        'slide-up': 'slideUp 0.6s ease-out',
-                        'pulse': 'pulse 2s infinite',
-                    },
-                    keyframes: {
-                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
-                        pulse: { '0%, 100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.05)' } }
-                    }
-                }
-            }
-        }
-	</script>
-
-	<style>
-		.glass-card { @apply bg-cinema-gray/80 backdrop-blur-xl border border-cinema-gold/30 rounded-2xl shadow-2xl; }
-        .table-row { @apply transition-all duration-300 hover:bg-cinema-red/20 hover:shadow-lg hover:scale-[1.01]; }
-        .btn-cinema { @apply inline-flex items-center gap-2 px-5 py-2.5 bg-cinema-red hover:bg-red-900 text-white font-semibold rounded-full shadow-lg transition-all duration-300 hover:shadow-cinema-gold/40 hover:scale-105; }
-        .btn-edit { @apply text-cinema-gold hover:text-yellow-400 font-medium transition-colors; }
-        .btn-delete { @apply text-red-400 hover:text-red-300 font-medium transition-colors; }
-        .badge-genre { @apply inline-block px-3 py-1 text-xs font-semibold rounded-full bg-cinema-gold/20 text-cinema-gold border border-cinema-gold/50; }
-        .poster-thumb { @apply w-full h-32 object-cover rounded-lg shadow-md transition-transform duration-300 hover:scale-105; }
-        .pagination-btn { @apply px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-cinema-gray/80 text-white border border-cinema-gold/30 hover:bg-cinema-red/30 hover:text-cinema-gold hover:border-cinema-gold; }
-        .pagination-btn.active { @apply bg-cinema-gold text-cinema-dark font-bold; }
-        .pagination-btn.disabled { @apply opacity-50 cursor-not-allowed; }
-	</style>
+	<title>Administrar Películas</title>
 </head>
-<body class="bg-cinema-dark text-gray-100 min-h-screen">
+<body>
 
-<div layout:fragment="content" class="max-w-7xl mx-auto px-4 py-24">
-
-	<!-- Título + Botón Agregar -->
-	<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 animate-fade-in">
-		<h1 class="text-4xl md:text-5xl font-cinzel font-bold">
-            <span class="bg-gradient-to-r from-cinema-gold to-yellow-400 bg-clip-text text-transparent">
-                Administrar Películas
-            </span>
-		</h1>
-		<a href="/admin/peliculas/nuevo" class="btn-cinema">
-			<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-			</svg>
-			Agregar Película
-		</a>
+<div layout:fragment="content">
+	<h2>Peliculas</h2>
+	<div class="text-end">
+		<a href="/admin/peliculas/nuevo" class="btn btn-primary mb-3">
+			Agregar película </a>
 	</div>
-
-	<!-- Tabla -->
-	<div class="glass-card overflow-hidden animate-slide-up">
-		<div class="overflow-x-auto">
-			<table class="w-full">
-				<thead class="bg-cinema-red/30">
-				<tr class="text-left text-cinema-gold font-semibold">
-					<th class="p-4">Póster</th>
-					<th class="p-4">Película</th>
-					<th class="p-4">F. Estreno</th>
-					<th class="p-4 text-right">Acciones</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr th:each="pelicula : ${peliculas}" th:object="${pelicula}"
-					class="table-row border-b border-cinema-gold/10">
-
-					<!-- Póster -->
-					<td class="p-4">
-						<a th:href="@{/assets/{filename}(filename=*{rutaPortada})}" data-fancybox="gallery">
-							<img th:src="@{/assets/{filename}(filename=*{rutaPortada})}"
-								 th:alt="*{titulo}"
-								 class="poster-thumb">
-						</a>
-					</td>
-
-					<!-- Info -->
-					<td class="p-4">
-						<div class="font-cinzel text-lg font-bold text-cinema-gold" th:text="*{titulo}">
-							Título
-						</div>
-						<p class="text-sm text-gray-300 line-clamp-2 mt-1" th:text="*{sinopsis}">
-							Sinopsis...
-						</p>
-						<div class="flex flex-wrap gap-1 mt-2">
-                                <span th:each="genero : *{generos}"
-									  class="badge-genre"
-									  th:text="${genero.titulo}">Acción</span>
-						</div>
-					</td>
-
-					<!-- Fecha -->
-					<td class="p-4 text-gray-300 font-medium"
-						th:text="*{#temporals.format(fechaEstreno,'dd/MM/yyyy')}">
-						01/01/2025
-					</td>
-
-					<!-- Acciones -->
-					<td class="p-4 text-right space-x-4">
-						<a th:href="@{/admin/peliculas/{id}/editar(id=*{id})}"
-						   class="btn-edit">
-							Editar
-						</a>
-						<a href="javascript:void(0)"
-						   class="btn-delete"
-						   th:onclick="'openDeleteModal(' + *{id} + ', \'' + *{titulo} + '\')'">
-							Eliminar
-						</a>
-
-						<!-- Form oculto -->
-						<form th:id="'deleteForm' + *{id}"
-							  th:action="@{/admin/peliculas/{id}/eliminar(id=*{id})}"
-							  method="post"
-							  class="hidden"></form>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<!-- Paginación -->
-		<div class="p-4 border-t border-cinema-gold/20" th:with="page=${peliculas}">
-			<div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-				<div class="text-sm text-gray-400" sd:pagination-sumary></div>
-				<nav aria-label="Paginación">
-					<ul class="pagination inline-flex items-center gap-2" sd:pagination="full"></ul>
+	<table class="table table-hover">
+		<thead>
+		<tr>
+			<th></th>
+			<th>Pelicula</th>
+			<th>F.Estreno</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="pelicula : ${peliculas}" th:object="${pelicula}">
+			<td style="width:150px;">
+				<a th:href="@{/assets/{filename}(filename=*{rutaPortada})}" data-fancybox>
+					<img th:src="@{/assets/{filename}(filename=*{rutaPortada})}" alt="" class="img-thumbnail w-100">
+				</a>
+			</td>
+			<td>
+				<div th:text="*{titulo}" class="fs-5 fw-bold"></div>
+				<p th:text="*{sinopsis}"></p>
+				<div>
+							<span class="badge rounded-pill bg-light text-dark me-1"
+								  th:each="genero : *{generos}" th:text="${genero.titulo}">
+							</span>
+				</div>
+			</td>
+			<td th:text="*{#temporals.format(fechaEstreno,'dd/MM/yyyy')}"></td>
+			<td class="text-end">
+				<a th:href="@{/admin/peliculas/{id}/editar(id=*{id})}">Editar</a>
+				<a href="javascript:void(0)" class="text-danger ms-3" th:onclick="'eliminarPelicula(' + *{id} +')'">Eliminar</a>
+				<form th:id="'eliminarPeliculaForm' + *{id}" th:action="@{/admin/peliculas/{id}/eliminar(id=*{id})}" method="post" class="d-none">
+				</form>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	<div class="row mt-5" th:with="page=${peliculas}">
+		<div class="col-sm-6">
+			<div sd:pagination-sumary>
+			</div>
+			<div class="col-sm-6">
+				<nav>
+					<ul class="pagination" sd:pagination="full"></ul>
 				</nav>
 			</div>
 		</div>
 	</div>
 </div>
 
-<!-- Modal de Confirmación -->
-<div id="deleteModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-	<div class="glass-card p-6 max-w-md w-full animate-slide-up">
-		<div class="flex items-center gap-3 text-red-400 mb-4">
-			<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-				<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-			</svg>
-			<h3 class="text-xl font-cinzel font-bold">Confirmar Eliminación</h3>
-		</div>
-		<p class="text-gray-300 mb-6">
-			¿Estás seguro de que deseas eliminar la película <span id="modalTitle" class="font-bold text-cinema-gold"></span>?
-			Esta acción no se puede deshacer.
-		</p>
-		<div class="flex justify-end gap-3">
-			<button onclick="closeDeleteModal()" class="px-5 py-2 bg-cinema-gray/80 text-white rounded-lg hover:bg-cinema-gray transition-colors">
-				Cancelar
-			</button>
-			<button id="confirmDeleteBtn" class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors">
-				Eliminar
-			</button>
-		</div>
-	</div>
-</div>
-
 <div layout:fragment="scripts">
 	<script>
-		let deleteId = null;
-
-        function openDeleteModal(id, title) {
-            deleteId = id;
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('deleteModal').classList.remove('hidden');
-            document.getElementById('deleteModal').classList.add('flex');
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
-            document.getElementById('deleteModal').classList.remove('flex');
-            deleteId = null;
-        }
-
-        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-            if (deleteId) {
-                document.getElementById('deleteForm' + deleteId).submit();
+		function eliminarPelicula(id){
+            if(!confirm('¿Estás seguro de eliminar esta película?')){
+                return;
             }
-        });
-
-        // Fancybox
-        $('[data-fancybox="gallery"]').fancybox({
-            protect: true,
-            animationDuration: 600,
-            buttons: ['close']
-        });
-
-        // Animaciones
-        document.querySelectorAll('.animate-fade-in, .animate-slide-up').forEach((el, i) => {
-            el.style.opacity = '0';
-            setTimeout(() => {
-                el.style.opacity = '1';
-                el.style.animation = el.classList.contains('animate-fade-in') ? 'fadeIn 0.8s ease-out' : 'slideUp 0.6s ease-out';
-            }, i * 100);
-        });
+            $('#eliminarPeliculaForm' + id).submit();
+        }
 	</script>
 </div>
 

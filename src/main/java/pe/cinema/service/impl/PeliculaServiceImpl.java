@@ -24,16 +24,18 @@ public class PeliculaServiceImpl implements PeliculaService {
     private final PeliculaRepositorio peliculaRepositorio;
     private final GeneroRepositorio generoRepositorio;
     private final AlmacenService almacenServicio;
-@Override
+
+    @Override
     public Page<Pelicula> listarPeliculas(Pageable pageable) {
         return peliculaRepositorio.findAll(pageable);
     }
 
-@Override
+    @Override
     public List<Genero> listarGeneros() {
         return generoRepositorio.findAll(Sort.by("titulo"));
     }
-@Override
+
+    @Override
     public Pelicula guardarPelicula(Pelicula pelicula) {
 
         String rutaPortada = almacenServicio.almacenarArchivo(pelicula.getPortada());
@@ -50,12 +52,14 @@ public class PeliculaServiceImpl implements PeliculaService {
 
         return peliculaRepositorio.save(peliculaAGuardar);
     }
-@Override
+
+    @Override
     public Pelicula obtenerPorId(Integer id) {
         return peliculaRepositorio.findById(id)
                 .orElseThrow(() -> new RuntimeException(String.format(AppConstants.PELICULA_NO_ENCONTRADA, id)));
     }
-@Override
+
+    @Override
     public Pelicula actualizarPelicula(Integer id, Pelicula pelicula) {
 
         Pelicula peliculaDB = obtenerPorId(id);
@@ -76,7 +80,8 @@ public class PeliculaServiceImpl implements PeliculaService {
 
         return peliculaRepositorio.save(peliculaDB);
     }
-@Override
+
+    @Override
     public void eliminarPelicula(Integer id) {
         Pelicula pelicula = obtenerPorId(id);
 

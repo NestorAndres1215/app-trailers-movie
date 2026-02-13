@@ -41,7 +41,7 @@ public class AlmacenServiceImpl implements AlmacenService {
 			Path destino = storagePath.resolve(nombreArchivo);
 			Files.copy(inputStream, destino, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			throw new AlmacenExcepcion(String.format(AppConstants.ERROR_ALMACENAR_ARCHIVO, nombreArchivo), e);
+			throw new AlmacenExcepcion(String.format(AppConstants.ERROR_ALMACENAR_ARCHIVO, nombreArchivo));
 		}
 
 		return nombreArchivo;
@@ -62,7 +62,7 @@ public class AlmacenServiceImpl implements AlmacenService {
 				throw new AlmacenExcepcion(String.format(AppConstants.ARCHIVO_NO_ENCONTRADO, nombreArchivo));
 			}
 		} catch (MalformedURLException e) {
-			throw new AlmacenExcepcion(String.format(AppConstants.ARCHIVO_NO_ENCONTRADO, nombreArchivo), e);
+			throw new AlmacenExcepcion(String.format(AppConstants.ARCHIVO_NO_ENCONTRADO, nombreArchivo));
 		}
 	}
 @Override
@@ -73,7 +73,7 @@ public class AlmacenServiceImpl implements AlmacenService {
 				FileSystemUtils.deleteRecursively(archivo);
 			}
 		} catch (IOException e) {
-			throw new AlmacenExcepcion(String.format(AppConstants.ERROR_ELIMINAR_ARCHIVO, nombreArchivo), e);
+			throw new AlmacenExcepcion(String.format(AppConstants.ERROR_ELIMINAR_ARCHIVO, nombreArchivo));
 		}
 	}
 }
