@@ -43,13 +43,24 @@ public class GeneroServiceImpl implements GeneroService {
     @Override
     public Genero actualizar(Integer id, Genero genero) {
         Genero existente = obtenerPorId(id);
+
+        generoRepositorio.findByTitulo(genero.getTitulo())
+                .filter(g -> !g.getId().equals(id))
+                .ifPresent(g -> {
+                    throw new RuntimeException("El título del género ya existe");
+                });
+
         existente.setTitulo(genero.getTitulo());
         return generoRepositorio.save(existente);
     }
 
     @Override
-    public void eliminar(Integer id) {
+    public Genero eliminar(Integer id) {
+
         Genero existente = obtenerPorId(id);
         generoRepositorio.delete(existente);
+
+        return existente;
     }
+
 }

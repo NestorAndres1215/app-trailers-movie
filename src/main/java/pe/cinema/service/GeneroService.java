@@ -16,6 +16,6 @@ public interface GeneroService {
 
     Genero actualizar(Integer id, Genero genero);
 
-    void eliminar(Integer id);
+    Genero eliminar(Integer id);
 
 }
