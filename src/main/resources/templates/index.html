@@ -15,20 +15,6 @@
 		<h2 class="fs-4 text-danger">Disfruta de tus trailers favoritos sin costo alguno</h2>
 	</div>
 
-	<h4 class="text-danger mt-5 mb-4">Últimos estrenos</h4>
-
-	<div class="row g-4">
-		<div class="col-12 col-sm-6 col-md-3" th:each="pelicula : ${ultimasPeliculas}" th:object="${pelicula}">
-			<a th:href="@{/peliculas/{id}(id=*{id})}" class="card h-100 shadow-sm text-decoration-none">
-				<img th:src="@{/assets/{filename}(filename=*{rutaPortada})}" th:alt="*{titulo}" class="card-img-top">
-				<div class="card-body">
-					<h2 class="card-title fs-6 fw-bold text-dark" th:text="*{titulo}"></h2>
-					<p class="text-muted small mb-0" th:text="*{#temporals.format(fechaEstreno,'dd/MM/yyyy')}"></p>
-				</div>
-			</a>
-		</div>
-	</div>
-
 </div>
 
 </body>
